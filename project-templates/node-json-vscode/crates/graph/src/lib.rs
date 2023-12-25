@@ -9,4 +9,9 @@ impl Guest for Component {
     fn hello_world() -> String {
         "Hello, World!".to_string()
     }
+
+    fn validate_task_name(name: String) -> bool {
+        name.len() > 0
+    }
 }
+
