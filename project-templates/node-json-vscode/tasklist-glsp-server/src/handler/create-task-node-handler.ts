@@ -27,6 +27,7 @@ import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
 import { Task } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
+import { helloWorld } from './graph';
 
 @injectable()
 export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
@@ -46,9 +47,10 @@ export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
 
     protected createTask(position: Point): Task {
         const nodeCounter = this.modelState.index.getAllByClass(GNode).length;
+        const helloWorldNode = helloWorld();
         return {
             id: uuid.v4(),
-            name: `NewTaskNode${nodeCounter}`,
+            name: helloWorldNode + `${nodeCounter}`,
             position
         };
     }

@@ -3,3 +3,6 @@ node_modules
 lib
 out
 dist
+tasklist-glsp-server/src/handler/graph.core.wasm
+tasklist-glsp-server/src/handler/graph.d.ts
+tasklist-glsp-server/src/handler/graph.js
