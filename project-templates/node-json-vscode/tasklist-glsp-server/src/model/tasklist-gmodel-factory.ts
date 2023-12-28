@@ -16,7 +16,8 @@
  ********************************************************************************/
 import { GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Task, Transition } from './tasklist-model';
+import * as task from '../handler/interfaces/component-graph-tasklist';
+import { Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 
 @injectable()
@@ -27,7 +28,7 @@ export class TaskListGModelFactory implements GModelFactory {
     createModel(): void {
         const taskList = this.modelState.sourceModel;
         this.modelState.index.indexTaskList(taskList);
-        const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
+        const childNodes = taskList.tasks.map(t => this.createTaskNode(t));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
         const newRoot = GGraph.builder() //
             .id(taskList.id)
@@ -37,17 +38,17 @@ export class TaskListGModelFactory implements GModelFactory {
         this.modelState.updateRoot(newRoot);
     }
 
-    protected createTaskNode(task: Task): GNode {
+    protected createTaskNode(t: task.Task): GNode {
         const builder = GNode.builder()
-            .id(task.id)
+            .id(t.id)
             .addCssClass('tasklist-node')
-            .add(GLabel.builder().text(task.name).id(`${task.id}_label`).build())
+            .add(GLabel.builder().text(t.name).id(`${t.id}_label`).build())
             .layout('hbox')
             .addLayoutOption('paddingLeft', 5)
-            .position(task.position);
+            .position(t.position);
 
-        if (task.size) {
-            builder.addLayoutOptions({ prefWidth: task.size.width, prefHeight: task.size.height });
+        if (t.size) {
+            builder.addLayoutOptions({ prefWidth: t.size.width, prefHeight: t.size.height });
         }
 
         return builder.build();

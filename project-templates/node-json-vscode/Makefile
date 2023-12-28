@@ -8,11 +8,11 @@ help:
 	@grep -E '^[a-zA-Z\._-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 build: ## builds the graph component
-	@$(CARGO) component build --release -p graph --target wasm32-unknown-unknown
+	@$(CARGO) component build --release -p graph --target wasm32-wasi
 	@$(YARN) build
 
 bindgen: build ## generates bindings for the graph component
-	@cd tasklist-glsp-server; $(YARN) jco transpile ../target/wasm32-unknown-unknown/release/graph.wasm --tla-compat -o src
+	@cd tasklist-glsp-server; $(YARN) jco transpile ../target/wasm32-unknown-unknown/release/graph.wasm --tla-compat -o src/handler
 
 opt: bindgen # optimizes the graph wasm module
 	@$(WASM_OPT) -Os src/graph.core.wasm -o src/graph.core.wasm

@@ -1,7 +1,29 @@
 package component:graph;
 
+interface tasklist {
+    record position {
+        x: u32,
+        y: u32,
+    }
+
+    record size {
+        width: u32,
+        height: u32,
+    }
+    record task {
+        id: string,
+        name: string,
+        position: position,
+        size: option<size>,
+    }
+   
+    tasks: func() -> list<task>;
+    add-task: func(position: position) -> task;
+  }
+
 /// An example world for the component to target.
 world example {
     export hello-world: func() -> string;
     export validate-task-name: func(name: string) -> bool;
+    export tasklist;
 }

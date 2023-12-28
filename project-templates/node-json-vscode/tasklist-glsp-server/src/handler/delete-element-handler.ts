@@ -25,9 +25,10 @@ import {
     toTypeGuard
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import * as task from '../handler/interfaces/component-graph-tasklist.d';
 import { Task, Transition } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
-
+type Task = typeof Task;
 @injectable()
 export class DeleteElementHandler extends JsonOperationHandler {
     readonly operationType = DeleteElementOperation.KIND;
@@ -72,7 +73,7 @@ export class DeleteElementHandler extends JsonOperationHandler {
         return [];
     }
 
-    private deleteModelElement(modelElement: Task | Transition | undefined): void {
+    private deleteModelElement(modelElement: task.Task | Transition | undefined): void {
         if (Task.is(modelElement)) {
             remove(this.modelState.sourceModel.tasks, modelElement);
         } else if (Transition.is(modelElement)) {

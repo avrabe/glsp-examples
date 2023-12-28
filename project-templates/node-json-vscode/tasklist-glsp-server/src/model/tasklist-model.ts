@@ -16,14 +16,15 @@
  ********************************************************************************/
 
 import { AnyObject, hasArrayProp, hasObjectProp, hasStringProp } from '@eclipse-glsp/server';
-
+import * as task from '../handler/interfaces/component-graph-tasklist';
+type Task = task.Task;
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
  * plain JSON objects that contains a set of {@link Task tasks} and {@link Transition transitions}.
  */
 export interface TaskList {
     id: string;
-    tasks: Task[];
+    tasks: task.Task[];
     transitions: Transition[];
 }
 
@@ -33,15 +34,15 @@ export namespace TaskList {
     }
 }
 
-export interface Task {
-    id: string;
-    name: string;
-    position: { x: number; y: number };
-    size?: { width: number; height: number };
-}
+// export interface Task {
+//    id: string;
+//   name: string;
+//   position: { x: number; y: number };
+//   size?: { width: number; height: number };
+// }
 
 export namespace Task {
-    export function is(object: any): object is Task {
+    export function is(object: any): object is task.Task {
         return AnyObject.is(object) && hasStringProp(object, 'id') && hasStringProp(object, 'name') && hasObjectProp(object, 'position');
     }
 }

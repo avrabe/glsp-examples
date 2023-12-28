@@ -33,7 +33,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b && cp src/handler/graph.* lib/handler/ && yarn bundle",
+    "build": "tsc -b && cp src/handler/graph.* lib/handler/ && cp -a src/handler/interfaces lib/handler && yarn bundle",
     "bundle": "webpack",
     "clean": "rimraf lib dist tsconfig.tsbuildinfo",
     "generate-wasm": "yarn jco transpile ../target/wasm32-unknown-unknown/release/graph.wasm --tla-compat -o src/handler",

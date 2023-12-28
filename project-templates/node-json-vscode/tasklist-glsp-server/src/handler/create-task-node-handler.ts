@@ -1,5 +1,10 @@
 /********************************************************************************
- * Copyright (c) 2022-2023 EclipseSource and others.
+ * Copyright (c) 2022-2023 EclipseSource and ot
+
+export function createTask(relativeLocation: Point) {
+    throw new Error('Function not implemented.');
+}
+hers.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,20 +19,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import {
-    Command,
-    CreateNodeOperation,
-    DefaultTypes,
-    GNode,
-    JsonCreateNodeOperationHandler,
-    MaybePromise,
-    Point
-} from '@eclipse-glsp/server';
+import { Command, CreateNodeOperation, DefaultTypes, JsonCreateNodeOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
-import { Task } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
-import { helloWorld } from './graph';
+
+import { tasklist } from './graph';
+// import { ComponentGraphTasklist, Task } from './interfaces/component-graph-tasklist.d';
 
 @injectable()
 export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
@@ -39,21 +36,22 @@ export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
             const relativeLocation = this.getRelativeLocation(operation) ?? Point.ORIGIN;
-            const task = this.createTask(relativeLocation);
+            const task = tasklist.addTask(relativeLocation);
+            // const task = this.createTask(relativeLocation);
             const taskList = this.modelState.sourceModel;
             taskList.tasks.push(task);
         });
     }
 
-    protected createTask(position: Point): Task {
-        const nodeCounter = this.modelState.index.getAllByClass(GNode).length;
-        const helloWorldNode = helloWorld();
-        return {
-            id: uuid.v4(),
-            name: helloWorldNode + `${nodeCounter}`,
-            position
-        };
-    }
+    // protected createTask(position: Point): Task {
+    //    const nodeCounter = this.modelState.index.getAllByClass(GNode).length;
+    //    const helloWorldNode = helloWorld();
+    //    return {
+    //        id: uuid.v4(),
+    //        name: helloWorldNode + `${nodeCounter}`,
+    //        position
+    //    };
+    // }
 
     get label(): string {
         return 'Task';

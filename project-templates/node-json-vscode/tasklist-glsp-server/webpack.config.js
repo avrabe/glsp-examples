@@ -34,6 +34,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.d\.ts$/, // use ignore-loader for declaration files
+                loader: 'ignore-loader'
+            },
+            {
                 test: /\.js$/,
                 use: ['source-map-loader'],
                 enforce: 'pre'
