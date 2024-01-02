@@ -1,4 +1,4 @@
-package component:graph;
+package component:tasklist;
 
 interface tasklist {
     record position {
@@ -10,20 +10,44 @@ interface tasklist {
         width: u32,
         height: u32,
     }
+
     record task {
         id: string,
         name: string,
         position: position,
         size: option<size>,
     }
-   
-    tasks: func() -> list<task>;
-    add-task: func(position: position) -> task;
-  }
+
+    record transition {
+        id: string,
+        source-task-id: string,
+        target-task-id: string,
+    }
+
+    resource tasklist-model {
+        id: func() -> string;
+        tasks: func() -> list<task>;
+        transitions: func() -> list<transition>;
+        
+        add-task: func(position: position) -> task;
+        remove-task: func(task-id: string);
+        resize-task: func(task-id: string, size: size);
+        move-task: func(task-id: string, position: position);
+
+        add-transition: func(source-task-id: string, target-task-id: string) -> transition;
+        remove-transition: func(transition-id: string);
+
+        export-to-json: func() -> string;
+        import-from-json: func(json: string);
+
+        create-model-for-empty-file: static func() -> tasklist-model;
+
+    }
+}
 
 /// An example world for the component to target.
 world example {
-    export hello-world: func() -> string;
-    export validate-task-name: func(name: string) -> bool;
+    //export hello-world: func() -> string;
+    //export validate-task-name: func(name: string) -> bool;
     export tasklist;
 }

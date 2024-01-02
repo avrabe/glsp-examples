@@ -51,5 +51,8 @@
     "no-inline-html": {
       "allowed_elements": ["br", "details", "summary"]
     }
-  }
+  },
+  "rust-analyzer.check.overrideCommand": ["cargo", "component", "check", "--message-format=json"],
+  "rust-analyzer.cargo.target": "wasm32-wasi"
+
 }
