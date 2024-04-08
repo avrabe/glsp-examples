@@ -25,8 +25,8 @@ import {
     toTypeGuard
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Task, Transition } from '../model/tasklist-model';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
+import { Task, Transition } from '../model/tasklist-model.js';
 
 @injectable()
 export class DeleteElementHandler extends JsonOperationHandler {

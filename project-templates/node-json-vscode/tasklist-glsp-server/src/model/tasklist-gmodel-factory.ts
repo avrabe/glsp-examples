@@ -16,8 +16,8 @@
  ********************************************************************************/
 import { GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Task, Transition } from './tasklist-model';
-import { TaskListModelState } from './tasklist-model-state';
+import { TaskListModelState } from './tasklist-model-state.js';
+import { Task, Transition } from './tasklist-model.js';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {

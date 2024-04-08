@@ -29,21 +29,25 @@ import {
     SourceModelStorage
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { CreateTaskHandler } from '../handler/create-task-node-handler';
-import { CreateTransitionHandler } from '../handler/create-transition-handler';
-import { DeleteElementHandler } from '../handler/delete-element-handler';
-import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler';
-import { TaskListChangeBoundsHandler } from '../handler/tasklist-change-bounds-handler';
-import { TaskListLabelEditValidator } from '../handler/tasklist-label-edit-validator';
-import { TaskListGModelFactory } from '../model/tasklist-gmodel-factory';
-import { TaskListModelIndex } from '../model/tasklist-model-index';
-import { TaskListModelState } from '../model/tasklist-model-state';
-import { TaskListStorage } from '../model/tasklist-storage';
-import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
+import { CreateTaskHandler } from '../handler/create-task-node-handler.js';
+import { CreateTransitionHandler } from '../handler/create-transition-handler.js';
+import { DeleteElementHandler } from '../handler/delete-element-handler.js';
+import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler.js';
+import { TaskListChangeBoundsHandler } from '../handler/tasklist-change-bounds-handler.js';
+import { TaskListLabelEditValidator } from '../handler/tasklist-label-edit-validator.js';
+import { TaskListGModelFactory } from '../model/tasklist-gmodel-factory.js';
+import { TaskListModelIndex } from '../model/tasklist-model-index.js';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
+import { TaskListStorage } from '../model/tasklist-storage.js';
+import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration.js';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
     readonly diagramType = 'tasklist-diagram';
+
+    public log(msg: string) {
+        console.log(msg);
+    }
 
     protected bindDiagramConfiguration(): BindingTarget<DiagramConfiguration> {
         return TaskListDiagramConfiguration;

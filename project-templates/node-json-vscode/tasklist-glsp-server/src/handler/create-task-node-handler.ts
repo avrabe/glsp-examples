@@ -25,8 +25,8 @@ import {
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { Task } from '../model/tasklist-model';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
+import { Task } from '../model/tasklist-model.js';
 
 @injectable()
 export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
@@ -38,6 +38,8 @@ export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
             const relativeLocation = this.getRelativeLocation(operation) ?? Point.ORIGIN;
+            this.modelState.worldModel.addTask(relativeLocation);
+
             const task = this.createTask(relativeLocation);
             const taskList = this.modelState.sourceModel;
             taskList.tasks.push(task);

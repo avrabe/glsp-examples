@@ -48,3 +48,5 @@ tsconfig.tsbuildinfo
 
 
 
+
+project-templates/node-json-vscode/tasklist-glsp-server/src/database/*

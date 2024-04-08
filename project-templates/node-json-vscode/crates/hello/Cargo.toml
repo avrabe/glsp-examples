@@ -1,0 +1,22 @@
+[package]
+name = "hello"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+wit-bindgen-rt = "0.22.0"
+url = "2.5.0"
+serde = { version = "1.0.192", features = ["derive"] }
+serde_json = { version = "1.0.108" }
+serde_path_to_error = "0.1"
+uuid = { version = "1.8.0", features = ["fast-rng", "v4", "macro-diagnostics"] }
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.component]
+package = "component:hello"
+
+[package.metadata.component.dependencies]

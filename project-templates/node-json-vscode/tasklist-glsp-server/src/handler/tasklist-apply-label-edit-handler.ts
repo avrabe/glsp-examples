@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 import { ApplyLabelEditOperation } from '@eclipse-glsp/protocol';
-import { Command, GLSPServerError, GNode, JsonOperationHandler, MaybePromise, toTypeGuard } from '@eclipse-glsp/server/node';
+import { Command, GLSPServerError, GNode, JsonOperationHandler, MaybePromise, toTypeGuard } from '@eclipse-glsp/server/node.js';
 import { inject, injectable } from 'inversify';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
@@ -28,6 +28,7 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
 
     override createCommand(operation: ApplyLabelEditOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
+            this.modelState.worldModel.setTaskName(operation.labelId, operation.text);
             const index = this.modelState.index;
             // Retrieve the parent node of the label that should be edited
             const taskNode = index.findParentElement(operation.labelId, toTypeGuard(GNode));

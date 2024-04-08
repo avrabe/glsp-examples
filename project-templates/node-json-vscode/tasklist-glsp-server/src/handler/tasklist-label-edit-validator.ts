@@ -16,7 +16,7 @@
  ********************************************************************************/
 import { GModelElement, LabelEditValidator, ValidationStatus } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
 
 /**
  * A simple edit label validator that verifies that the given name label is not empty.
