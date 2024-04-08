@@ -17,8 +17,8 @@
 import { Command, CreateEdgeOperation, DefaultTypes, JsonCreateEdgeOperationHandler, MaybePromise } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { Transition } from '../model/tasklist-model';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
+import { Transition } from '../model/tasklist-model.js';
 
 @injectable()
 export class CreateTransitionHandler extends JsonCreateEdgeOperationHandler {

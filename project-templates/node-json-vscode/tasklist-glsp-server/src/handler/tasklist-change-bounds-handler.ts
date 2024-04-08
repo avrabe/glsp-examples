@@ -17,7 +17,7 @@
 
 import { ChangeBoundsOperation, Command, Dimension, GNode, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
 
 @injectable()
 export class TaskListChangeBoundsHandler extends JsonOperationHandler {

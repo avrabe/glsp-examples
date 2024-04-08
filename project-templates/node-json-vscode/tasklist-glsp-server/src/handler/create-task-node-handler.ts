@@ -25,8 +25,8 @@ import {
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { Task } from '../model/tasklist-model';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state.js';
+import { Task } from '../model/tasklist-model.js';
 
 @injectable()
 export class CreateTaskHandler extends JsonCreateNodeOperationHandler {

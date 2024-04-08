@@ -28,25 +28,35 @@
       "url": "https://projects.eclipse.org/projects/ecd.glsp"
     }
   ],
+  "type": "module",
   "main": "./dist/tasklist-glsp-server.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b && yarn bundle",
+    "build": "tsc -b && yarn jco && yarn postbundle && yarn bundle",
     "bundle": "webpack",
+    "postbundle": "copyfiles -u 1 src/database/* lib/",
     "clean": "rimraf lib dist tsconfig.tsbuildinfo",
+    "jco": "cargo component build --release && jco transpile ../target/wasm32-wasi/release/hello.wasm --tla-compat  --no-namespaced-exports -o src/database",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "prepare": "yarn clean && yarn build",
     "start": "node --enable-source-maps lib/index.js",
     "watch": "tsc -w"
   },
+  "dependencies": {
+    "@types/node": "^20.11.30",
+    "lerna": "^8.1.2"
+  },
   "devDependencies": {
+    "@bytecodealliance/jco": "^1.0.3",
+    "@bytecodealliance/preview2-shim": "^0.16.0",
     "@eclipse-glsp/server": "2.0.0",
-    "inversify": "6.0.1",
-    "reflect-metadata": "0.1.13",
-    "source-map-loader": "^4.0.1",
+    "copyfiles": "^2.4.1",
+    "inversify": "6.0.2",
+    "raw-loader": "^4.0.2",
+    "source-map-loader": "^5.0.0",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },

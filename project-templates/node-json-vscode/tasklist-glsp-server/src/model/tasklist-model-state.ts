@@ -16,8 +16,8 @@
  ********************************************************************************/
 import { DefaultModelState, JsonModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { TaskList } from './tasklist-model';
-import { TaskListModelIndex } from './tasklist-model-index';
+import { TaskListModelIndex } from './tasklist-model-index.js';
+import { TaskList } from './tasklist-model.js';
 
 @injectable()
 export class TaskListModelState extends DefaultModelState implements JsonModelState<TaskList> {

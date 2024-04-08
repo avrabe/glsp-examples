@@ -15,10 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 import 'reflect-metadata';
+import { $init } from './database/hello.js';
 
-import { createAppModule, createSocketCliParser, ServerModule, SocketServerLauncher } from '@eclipse-glsp/server/node';
+import { createAppModule, createSocketCliParser, ServerModule, SocketServerLauncher } from '@eclipse-glsp/server/node.js';
 import { Container } from 'inversify';
-import { TaskListDiagramModule } from './diagram/tasklist-diagram-module';
+import { TaskListDiagramModule } from './diagram/tasklist-diagram-module.js';
 
 export async function launch(argv?: string[]): Promise<void> {
     const options = createSocketCliParser().parse(argv);
@@ -31,5 +32,7 @@ export async function launch(argv?: string[]): Promise<void> {
     launcher.configure(serverModule);
     launcher.start({ port: options.port, host: options.host });
 }
-
-launch(process.argv).catch(error => console.error('Error in tasklist server launcher:', error));
+(async () => {
+    await $init;
+    launch(process.argv).catch(error => console.error('Error in tasklist server launcher:', error));
+})();

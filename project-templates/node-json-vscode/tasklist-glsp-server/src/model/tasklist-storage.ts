@@ -15,19 +15,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-import { AbstractJsonModelStorage, MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server/node';
+import { AbstractJsonModelStorage, MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server/node.js';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { TaskList } from './tasklist-model';
-import { TaskListModelState } from './tasklist-model-state';
+import { hello } from '../database/hello.js';
+import { TaskListModelState } from './tasklist-model-state.js';
+import { TaskList } from './tasklist-model.js';
 
 @injectable()
 export class TaskListStorage extends AbstractJsonModelStorage {
+    private world = hello.Hello.createWorld();
+
+    public log(msg: string) {
+        console.log('save' + msg);
+    }
+
     @inject(TaskListModelState)
     protected override modelState: TaskListModelState;
 
     loadSourceModel(action: RequestModelAction): MaybePromise<void> {
+        this.log(this.world.calls());
         const sourceUri = this.getSourceUri(action);
+        this.log('Loading source model from ' + sourceUri);
+        this.log(this.world.execute(sourceUri));
         const taskList = this.loadFromFile(sourceUri, TaskList.is);
         this.modelState.updateSourceModel(taskList);
     }

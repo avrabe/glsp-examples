@@ -1,0 +1,17 @@
+package component:hello;
+
+interface hello {
+
+    resource hello {
+        calls: func() -> string;
+        execute: func(filename: string) -> string;
+        create-world: static func() -> hello;
+
+    }
+}
+
+/// An example world for the component to target.
+world example {
+    export hello;
+    
+}

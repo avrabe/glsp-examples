@@ -16,7 +16,7 @@
  ********************************************************************************/
 import { GModelIndex } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { Task, TaskList, Transition } from './tasklist-model';
+import { Task, TaskList, Transition } from './tasklist-model.js';
 
 @injectable()
 export class TaskListModelIndex extends GModelIndex {

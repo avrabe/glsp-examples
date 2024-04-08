@@ -1,11 +1,36 @@
 {
   "extends": "@eclipse-glsp/ts-config",
   "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "noImplicitOverride": true,
+    "noEmitOnError": false,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "strict": true,
+    "incremental": true,
+    // Needs to be disabled to support property injection
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "module": "es2022",
+    "moduleResolution": "Node",
+    "target": "ES2017",
+    "jsx": "react",
+    "lib": ["ES2017", "dom"],
+    "sourceMap": true,
+    "types": ["node", "reflect-metadata"],
+
+
     "rootDir": "src",
     "outDir": "lib",
     "reactNamespace": "JSX",
     "skipLibCheck": true,
-    "types": []
   },
   "include": ["src"]
 }
