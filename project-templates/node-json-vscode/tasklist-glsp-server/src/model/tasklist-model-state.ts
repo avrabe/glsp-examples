@@ -16,6 +16,7 @@
  ********************************************************************************/
 import { DefaultModelState, JsonModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import { TasklistModel } from '../database/interfaces/component-tasklist-tasklist.js';
 import { TaskListModelIndex } from './tasklist-model-index.js';
 import { TaskList } from './tasklist-model.js';
 
@@ -24,12 +25,24 @@ export class TaskListModelState extends DefaultModelState implements JsonModelSt
     @inject(TaskListModelIndex)
     override readonly index: TaskListModelIndex;
 
+    protected _world: TasklistModel;
     protected _taskList: TaskList;
 
+    public log(msg: string) {
+        console.log('state ' + msg);
+    }
     get sourceModel(): TaskList {
         return this._taskList;
     }
 
+    get worldModel(): TasklistModel {
+        return this._world;
+    }
+
+    updateSourceTasklistModel(taskList: TasklistModel): void {
+        this._world = taskList;
+        this.log(this._world.id());
+    }
     updateSourceModel(taskList: TaskList): void {
         this._taskList = taskList;
         this.index.indexTaskList(taskList);
