@@ -44,7 +44,9 @@ export class TaskListStorage extends AbstractJsonModelStorage {
 
     saveSourceModel(action: SaveModelAction): MaybePromise<void> {
         const sourceUri = this.getFileUri(action);
-        this.writeFile(sourceUri, this.modelState.sourceModel);
+        this.log('Saving source model to ' + sourceUri);
+        this.world.saveToFile(sourceUri);
+        //this.writeFile(sourceUri, this.modelState.sourceModel);
     }
 
     protected override createModelForEmptyFile(path: string): TaskList {

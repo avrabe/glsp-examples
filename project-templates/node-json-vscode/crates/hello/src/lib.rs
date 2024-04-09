@@ -1,8 +1,10 @@
 mod bindings;
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::io::Write;
 use std::{cell::RefCell, io::Read};
 use url::Url;
+use uuid::Uuid;
 
 use bindings::exports::component::{
     self,
@@ -97,8 +99,16 @@ impl GuestTasklistModel for TaskListComponent {
     }
 
     fn save_to_file(&self, filename: String) {
-        let _ = filename;
-        todo!()
+        let path = Url::parse(&filename).unwrap().to_file_path().unwrap();
+        unsafe {
+            let mut file = fs::File::create(&path).unwrap();
+            let tl = self.calls.try_borrow_unguarded().unwrap();
+            let tls = serde_json::to_string(&tl).unwrap();
+            println!("Serialized task list to: {}", path.display());
+            println!("Wrote {} bytes", tls.len());
+            println!("{tls}");
+            file.write(tls.as_bytes()).unwrap();
+        }
     }
 
     fn load_from_file(&self, filename: String) {
@@ -115,9 +125,9 @@ impl GuestTasklistModel for TaskListComponent {
             Err(err) => {
                 println!("Error deserializing task list, return new empty: {:?}", err);
                 self.calls.replace(TaskList {
-                    id: "12344".to_string(),
-                    tasks: None,
-                    transitions: None,
+                    id: Uuid::new_v4().to_string(),
+                    tasks: Some(Vec::new()),
+                    transitions: Some(Vec::new()),
                 });
             }
         }
@@ -126,9 +136,9 @@ impl GuestTasklistModel for TaskListComponent {
     fn create_model_for_empty_file() -> TasklistModel {
         let tl = TaskListComponent {
             calls: RefCell::new(TaskList {
-                id: "12344".to_string(),
-                tasks: None,
-                transitions: None,
+                id: Uuid::new_v4().to_string(),
+                tasks: Some(Vec::new()),
+                transitions: Some(Vec::new()),
             }),
         };
         component::tasklist::tasklist::TasklistModel::new(tl)
