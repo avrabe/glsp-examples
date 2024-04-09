@@ -18,13 +18,13 @@
 import { AbstractJsonModelStorage, MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server/node.js';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { hello } from '../database/hello.js';
+import { tasklist } from '../database/hello.js';
 import { TaskListModelState } from './tasklist-model-state.js';
 import { TaskList } from './tasklist-model.js';
 
 @injectable()
 export class TaskListStorage extends AbstractJsonModelStorage {
-    private world = hello.Hello.createWorld();
+    private world = tasklist.TasklistModel.createModelForEmptyFile();
 
     public log(msg: string) {
         console.log('save' + msg);
@@ -34,10 +34,10 @@ export class TaskListStorage extends AbstractJsonModelStorage {
     protected override modelState: TaskListModelState;
 
     loadSourceModel(action: RequestModelAction): MaybePromise<void> {
-        this.log(this.world.calls());
         const sourceUri = this.getSourceUri(action);
         this.log('Loading source model from ' + sourceUri);
-        this.log(this.world.execute(sourceUri));
+        this.world.loadFromFile(sourceUri);
+        this.log(this.world.id());
         const taskList = this.loadFromFile(sourceUri, TaskList.is);
         this.modelState.updateSourceModel(taskList);
     }

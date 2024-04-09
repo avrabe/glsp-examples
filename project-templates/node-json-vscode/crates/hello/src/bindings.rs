@@ -2,52 +2,112 @@
 // Options used:
 pub mod exports {
     pub mod component {
-        pub mod hello {
+        pub mod tasklist {
             #[allow(clippy::all)]
-            pub mod hello {
+            pub mod tasklist {
                 #[used]
                 #[doc(hidden)]
                 #[cfg(target_arch = "wasm32")]
                 static __FORCE_SECTION_REF: fn() =
                     super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
+                #[repr(C)]
+                #[derive(Clone, Copy)]
+                pub struct Position {
+                    pub x: u32,
+                    pub y: u32,
+                }
+                impl ::core::fmt::Debug for Position {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("Position")
+                            .field("x", &self.x)
+                            .field("y", &self.y)
+                            .finish()
+                    }
+                }
+                #[repr(C)]
+                #[derive(Clone, Copy)]
+                pub struct Size {
+                    pub width: u32,
+                    pub height: u32,
+                }
+                impl ::core::fmt::Debug for Size {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("Size")
+                            .field("width", &self.width)
+                            .field("height", &self.height)
+                            .finish()
+                    }
+                }
+                #[derive(Clone)]
+                pub struct Task {
+                    pub id: _rt::String,
+                    pub name: _rt::String,
+                    pub position: Position,
+                    pub size: Option<Size>,
+                }
+                impl ::core::fmt::Debug for Task {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("Task")
+                            .field("id", &self.id)
+                            .field("name", &self.name)
+                            .field("position", &self.position)
+                            .field("size", &self.size)
+                            .finish()
+                    }
+                }
+                #[derive(Clone)]
+                pub struct Transition {
+                    pub id: _rt::String,
+                    pub source_task_id: _rt::String,
+                    pub target_task_id: _rt::String,
+                }
+                impl ::core::fmt::Debug for Transition {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("Transition")
+                            .field("id", &self.id)
+                            .field("source-task-id", &self.source_task_id)
+                            .field("target-task-id", &self.target_task_id)
+                            .finish()
+                    }
+                }
 
                 #[derive(Debug)]
                 #[repr(transparent)]
-                pub struct Hello {
-                    handle: _rt::Resource<Hello>,
+                pub struct TasklistModel {
+                    handle: _rt::Resource<TasklistModel>,
                 }
 
-                type _HelloRep<T> = Option<T>;
+                type _TasklistModelRep<T> = Option<T>;
 
-                impl Hello {
+                impl TasklistModel {
                     /// Creates a new resource from the specified representation.
                     ///
                     /// This function will create a new resource handle by moving `val` onto
                     /// the heap and then passing that heap pointer to the component model to
-                    /// create a handle. The owned handle is then returned as `Hello`.
-                    pub fn new<T: GuestHello>(val: T) -> Self {
+                    /// create a handle. The owned handle is then returned as `TasklistModel`.
+                    pub fn new<T: GuestTasklistModel>(val: T) -> Self {
                         Self::type_guard::<T>();
-                        let val: _HelloRep<T> = Some(val);
-                        let ptr: *mut _HelloRep<T> = _rt::Box::into_raw(_rt::Box::new(val));
+                        let val: _TasklistModelRep<T> = Some(val);
+                        let ptr: *mut _TasklistModelRep<T> = _rt::Box::into_raw(_rt::Box::new(val));
                         unsafe { Self::from_handle(T::_resource_new(ptr.cast())) }
                     }
 
                     /// Gets access to the underlying `T` which represents this resource.
-                    pub fn get<T: GuestHello>(&self) -> &T {
+                    pub fn get<T: GuestTasklistModel>(&self) -> &T {
                         let ptr = unsafe { &*self.as_ptr::<T>() };
                         ptr.as_ref().unwrap()
                     }
 
                     /// Gets mutable access to the underlying `T` which represents this
                     /// resource.
-                    pub fn get_mut<T: GuestHello>(&mut self) -> &mut T {
+                    pub fn get_mut<T: GuestTasklistModel>(&mut self) -> &mut T {
                         let ptr = unsafe { &mut *self.as_ptr::<T>() };
                         ptr.as_mut().unwrap()
                     }
 
                     /// Consumes this resource and returns the underlying `T`.
-                    pub fn into_inner<T: GuestHello>(self) -> T {
+                    pub fn into_inner<T: GuestTasklistModel>(self) -> T {
                         let ptr = unsafe { &mut *self.as_ptr::<T>() };
                         ptr.take().unwrap()
                     }
@@ -69,7 +129,7 @@ pub mod exports {
                         _rt::Resource::handle(&self.handle)
                     }
 
-                    // It's theoretically possible to implement the `GuestHello` trait twice
+                    // It's theoretically possible to implement the `GuestTasklistModel` trait twice
                     // so guard against using it with two different types here.
                     #[doc(hidden)]
                     fn type_guard<T: 'static>() {
@@ -88,22 +148,22 @@ pub mod exports {
                         }
                     }
 
-                    fn as_ptr<T: GuestHello>(&self) -> *mut _HelloRep<T> {
-                        Hello::type_guard::<T>();
+                    fn as_ptr<T: GuestTasklistModel>(&self) -> *mut _TasklistModelRep<T> {
+                        TasklistModel::type_guard::<T>();
                         unsafe { T::_resource_rep(self.handle()).cast() }
                     }
                 }
 
-                /// A borrowed version of [`Hello`] which represents a borrowed value
+                /// A borrowed version of [`TasklistModel`] which represents a borrowed value
                 /// with the lifetime `'a`.
                 #[derive(Debug)]
                 #[repr(transparent)]
-                pub struct HelloBorrow<'a> {
+                pub struct TasklistModelBorrow<'a> {
                     rep: *mut u8,
-                    _marker: core::marker::PhantomData<&'a Hello>,
+                    _marker: core::marker::PhantomData<&'a TasklistModel>,
                 }
 
-                impl<'a> HelloBorrow<'a> {
+                impl<'a> TasklistModelBorrow<'a> {
                     #[doc(hidden)]
                     pub unsafe fn lift(rep: usize) -> Self {
                         Self {
@@ -113,7 +173,7 @@ pub mod exports {
                     }
 
                     /// Gets access to the underlying `T` in this resource.
-                    pub fn get<T: GuestHello>(&self) -> &T {
+                    pub fn get<T: GuestTasklistModel>(&self) -> &T {
                         let ptr = unsafe { &mut *self.as_ptr::<T>() };
                         ptr.as_ref().unwrap()
                     }
@@ -121,13 +181,13 @@ pub mod exports {
                     // NB: mutable access is not allowed due to the component model allowing
                     // multiple borrows of the same resource.
 
-                    fn as_ptr<T: 'static>(&self) -> *mut _HelloRep<T> {
-                        Hello::type_guard::<T>();
+                    fn as_ptr<T: 'static>(&self) -> *mut _TasklistModelRep<T> {
+                        TasklistModel::type_guard::<T>();
                         self.rep.cast()
                     }
                 }
 
-                unsafe impl _rt::WasmResource for Hello {
+                unsafe impl _rt::WasmResource for TasklistModel {
                     #[inline]
                     unsafe fn drop(_handle: u32) {
                         #[cfg(not(target_arch = "wasm32"))]
@@ -135,9 +195,9 @@ pub mod exports {
 
                         #[cfg(target_arch = "wasm32")]
                         {
-                            #[link(wasm_import_module = "[export]component:hello/hello")]
+                            #[link(wasm_import_module = "[export]component:tasklist/tasklist")]
                             extern "C" {
-                                #[link_name = "[resource-drop]hello"]
+                                #[link_name = "[resource-drop]tasklist-model"]
                                 fn drop(_: u32);
                             }
 
@@ -148,8 +208,10 @@ pub mod exports {
 
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_method_hello_calls_cabi<T: GuestHello>(arg0: i32) -> *mut u8 {
-                    let result0 = T::calls(HelloBorrow::lift(arg0 as u32 as usize).get());
+                pub unsafe fn _export_method_tasklist_model_id_cabi<T: GuestTasklistModel>(
+                    arg0: i32,
+                ) -> *mut u8 {
+                    let result0 = T::id(TasklistModelBorrow::lift(arg0 as u32 as usize).get());
                     let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
                     let vec2 = (result0.into_bytes()).into_boxed_slice();
                     let ptr2 = vec2.as_ptr().cast::<u8>();
@@ -161,50 +223,432 @@ pub mod exports {
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn __post_return_method_hello_calls<T: GuestHello>(arg0: *mut u8) {
+                pub unsafe fn __post_return_method_tasklist_model_id<T: GuestTasklistModel>(
+                    arg0: *mut u8,
+                ) {
                     let l0 = *arg0.add(0).cast::<*mut u8>();
                     let l1 = *arg0.add(4).cast::<usize>();
                     _rt::cabi_dealloc(l0, l1, 1);
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_method_hello_execute_cabi<T: GuestHello>(
+                pub unsafe fn _export_method_tasklist_model_tasks_cabi<T: GuestTasklistModel>(
                     arg0: i32,
-                    arg1: *mut u8,
-                    arg2: usize,
                 ) -> *mut u8 {
-                    let len0 = arg2;
-                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
-                    let result1 = T::execute(
-                        HelloBorrow::lift(arg0 as u32 as usize).get(),
-                        _rt::string_lift(bytes0),
+                    let result0 = T::tasks(TasklistModelBorrow::lift(arg0 as u32 as usize).get());
+                    let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    let vec7 = result0;
+                    let len7 = vec7.len();
+                    let layout7 = _rt::alloc::Layout::from_size_align_unchecked(vec7.len() * 36, 4);
+                    let result7 = if layout7.size() != 0 {
+                        let ptr = _rt::alloc::alloc(layout7).cast::<u8>();
+                        if ptr.is_null() {
+                            _rt::alloc::handle_alloc_error(layout7);
+                        }
+                        ptr
+                    } else {
+                        {
+                            ::core::ptr::null_mut()
+                        }
+                    };
+                    for (i, e) in vec7.into_iter().enumerate() {
+                        let base = result7.add(i * 36);
+                        {
+                            let Task {
+                                id: id2,
+                                name: name2,
+                                position: position2,
+                                size: size2,
+                            } = e;
+                            let vec3 = (id2.into_bytes()).into_boxed_slice();
+                            let ptr3 = vec3.as_ptr().cast::<u8>();
+                            let len3 = vec3.len();
+                            ::core::mem::forget(vec3);
+                            *base.add(4).cast::<usize>() = len3;
+                            *base.add(0).cast::<*mut u8>() = ptr3.cast_mut();
+                            let vec4 = (name2.into_bytes()).into_boxed_slice();
+                            let ptr4 = vec4.as_ptr().cast::<u8>();
+                            let len4 = vec4.len();
+                            ::core::mem::forget(vec4);
+                            *base.add(12).cast::<usize>() = len4;
+                            *base.add(8).cast::<*mut u8>() = ptr4.cast_mut();
+                            let Position { x: x5, y: y5 } = position2;
+                            *base.add(16).cast::<i32>() = _rt::as_i32(x5);
+                            *base.add(20).cast::<i32>() = _rt::as_i32(y5);
+                            match size2 {
+                                Some(e) => {
+                                    *base.add(24).cast::<u8>() = (1i32) as u8;
+                                    let Size {
+                                        width: width6,
+                                        height: height6,
+                                    } = e;
+                                    *base.add(28).cast::<i32>() = _rt::as_i32(width6);
+                                    *base.add(32).cast::<i32>() = _rt::as_i32(height6);
+                                }
+                                None => {
+                                    *base.add(24).cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                        }
+                    }
+                    *ptr1.add(4).cast::<usize>() = len7;
+                    *ptr1.add(0).cast::<*mut u8>() = result7;
+                    ptr1
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn __post_return_method_tasklist_model_tasks<T: GuestTasklistModel>(
+                    arg0: *mut u8,
+                ) {
+                    let l4 = *arg0.add(0).cast::<*mut u8>();
+                    let l5 = *arg0.add(4).cast::<usize>();
+                    let base6 = l4;
+                    let len6 = l5;
+                    for i in 0..len6 {
+                        let base = base6.add(i * 36);
+                        {
+                            let l0 = *base.add(0).cast::<*mut u8>();
+                            let l1 = *base.add(4).cast::<usize>();
+                            _rt::cabi_dealloc(l0, l1, 1);
+                            let l2 = *base.add(8).cast::<*mut u8>();
+                            let l3 = *base.add(12).cast::<usize>();
+                            _rt::cabi_dealloc(l2, l3, 1);
+                        }
+                    }
+                    _rt::cabi_dealloc(base6, len6 * 36, 4);
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_transitions_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                ) -> *mut u8 {
+                    let result0 =
+                        T::transitions(TasklistModelBorrow::lift(arg0 as u32 as usize).get());
+                    let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    let vec6 = result0;
+                    let len6 = vec6.len();
+                    let layout6 = _rt::alloc::Layout::from_size_align_unchecked(vec6.len() * 24, 4);
+                    let result6 = if layout6.size() != 0 {
+                        let ptr = _rt::alloc::alloc(layout6).cast::<u8>();
+                        if ptr.is_null() {
+                            _rt::alloc::handle_alloc_error(layout6);
+                        }
+                        ptr
+                    } else {
+                        {
+                            ::core::ptr::null_mut()
+                        }
+                    };
+                    for (i, e) in vec6.into_iter().enumerate() {
+                        let base = result6.add(i * 24);
+                        {
+                            let Transition {
+                                id: id2,
+                                source_task_id: source_task_id2,
+                                target_task_id: target_task_id2,
+                            } = e;
+                            let vec3 = (id2.into_bytes()).into_boxed_slice();
+                            let ptr3 = vec3.as_ptr().cast::<u8>();
+                            let len3 = vec3.len();
+                            ::core::mem::forget(vec3);
+                            *base.add(4).cast::<usize>() = len3;
+                            *base.add(0).cast::<*mut u8>() = ptr3.cast_mut();
+                            let vec4 = (source_task_id2.into_bytes()).into_boxed_slice();
+                            let ptr4 = vec4.as_ptr().cast::<u8>();
+                            let len4 = vec4.len();
+                            ::core::mem::forget(vec4);
+                            *base.add(12).cast::<usize>() = len4;
+                            *base.add(8).cast::<*mut u8>() = ptr4.cast_mut();
+                            let vec5 = (target_task_id2.into_bytes()).into_boxed_slice();
+                            let ptr5 = vec5.as_ptr().cast::<u8>();
+                            let len5 = vec5.len();
+                            ::core::mem::forget(vec5);
+                            *base.add(20).cast::<usize>() = len5;
+                            *base.add(16).cast::<*mut u8>() = ptr5.cast_mut();
+                        }
+                    }
+                    *ptr1.add(4).cast::<usize>() = len6;
+                    *ptr1.add(0).cast::<*mut u8>() = result6;
+                    ptr1
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn __post_return_method_tasklist_model_transitions<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: *mut u8,
+                ) {
+                    let l6 = *arg0.add(0).cast::<*mut u8>();
+                    let l7 = *arg0.add(4).cast::<usize>();
+                    let base8 = l6;
+                    let len8 = l7;
+                    for i in 0..len8 {
+                        let base = base8.add(i * 24);
+                        {
+                            let l0 = *base.add(0).cast::<*mut u8>();
+                            let l1 = *base.add(4).cast::<usize>();
+                            _rt::cabi_dealloc(l0, l1, 1);
+                            let l2 = *base.add(8).cast::<*mut u8>();
+                            let l3 = *base.add(12).cast::<usize>();
+                            _rt::cabi_dealloc(l2, l3, 1);
+                            let l4 = *base.add(16).cast::<*mut u8>();
+                            let l5 = *base.add(20).cast::<usize>();
+                            _rt::cabi_dealloc(l4, l5, 1);
+                        }
+                    }
+                    _rt::cabi_dealloc(base8, len8 * 24, 4);
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_add_task_cabi<T: GuestTasklistModel>(
+                    arg0: i32,
+                    arg1: i32,
+                    arg2: i32,
+                ) -> *mut u8 {
+                    let result0 = T::add_task(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        Position {
+                            x: arg1 as u32,
+                            y: arg2 as u32,
+                        },
                     );
-                    let ptr2 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    let vec3 = (result1.into_bytes()).into_boxed_slice();
+                    let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    let Task {
+                        id: id2,
+                        name: name2,
+                        position: position2,
+                        size: size2,
+                    } = result0;
+                    let vec3 = (id2.into_bytes()).into_boxed_slice();
                     let ptr3 = vec3.as_ptr().cast::<u8>();
                     let len3 = vec3.len();
                     ::core::mem::forget(vec3);
-                    *ptr2.add(4).cast::<usize>() = len3;
-                    *ptr2.add(0).cast::<*mut u8>() = ptr3.cast_mut();
-                    ptr2
+                    *ptr1.add(4).cast::<usize>() = len3;
+                    *ptr1.add(0).cast::<*mut u8>() = ptr3.cast_mut();
+                    let vec4 = (name2.into_bytes()).into_boxed_slice();
+                    let ptr4 = vec4.as_ptr().cast::<u8>();
+                    let len4 = vec4.len();
+                    ::core::mem::forget(vec4);
+                    *ptr1.add(12).cast::<usize>() = len4;
+                    *ptr1.add(8).cast::<*mut u8>() = ptr4.cast_mut();
+                    let Position { x: x5, y: y5 } = position2;
+                    *ptr1.add(16).cast::<i32>() = _rt::as_i32(x5);
+                    *ptr1.add(20).cast::<i32>() = _rt::as_i32(y5);
+                    match size2 {
+                        Some(e) => {
+                            *ptr1.add(24).cast::<u8>() = (1i32) as u8;
+                            let Size {
+                                width: width6,
+                                height: height6,
+                            } = e;
+                            *ptr1.add(28).cast::<i32>() = _rt::as_i32(width6);
+                            *ptr1.add(32).cast::<i32>() = _rt::as_i32(height6);
+                        }
+                        None => {
+                            *ptr1.add(24).cast::<u8>() = (0i32) as u8;
+                        }
+                    };
+                    ptr1
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn __post_return_method_hello_execute<T: GuestHello>(arg0: *mut u8) {
+                pub unsafe fn __post_return_method_tasklist_model_add_task<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: *mut u8,
+                ) {
                     let l0 = *arg0.add(0).cast::<*mut u8>();
                     let l1 = *arg0.add(4).cast::<usize>();
                     _rt::cabi_dealloc(l0, l1, 1);
+                    let l2 = *arg0.add(8).cast::<*mut u8>();
+                    let l3 = *arg0.add(12).cast::<usize>();
+                    _rt::cabi_dealloc(l2, l3, 1);
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_static_hello_create_world_cabi<T: GuestHello>() -> i32 {
-                    let result0 = T::create_world();
+                pub unsafe fn _export_method_tasklist_model_remove_task_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    T::remove_task(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_resize_task_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                    arg3: i32,
+                    arg4: i32,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    T::resize_task(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                        Size {
+                            width: arg3 as u32,
+                            height: arg4 as u32,
+                        },
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_move_task_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                    arg3: i32,
+                    arg4: i32,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    T::move_task(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                        Position {
+                            x: arg3 as u32,
+                            y: arg4 as u32,
+                        },
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_add_transition_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                    arg3: *mut u8,
+                    arg4: usize,
+                ) -> *mut u8 {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    let len1 = arg4;
+                    let bytes1 = _rt::Vec::from_raw_parts(arg3.cast(), len1, len1);
+                    let result2 = T::add_transition(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                        _rt::string_lift(bytes1),
+                    );
+                    let ptr3 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    let Transition {
+                        id: id4,
+                        source_task_id: source_task_id4,
+                        target_task_id: target_task_id4,
+                    } = result2;
+                    let vec5 = (id4.into_bytes()).into_boxed_slice();
+                    let ptr5 = vec5.as_ptr().cast::<u8>();
+                    let len5 = vec5.len();
+                    ::core::mem::forget(vec5);
+                    *ptr3.add(4).cast::<usize>() = len5;
+                    *ptr3.add(0).cast::<*mut u8>() = ptr5.cast_mut();
+                    let vec6 = (source_task_id4.into_bytes()).into_boxed_slice();
+                    let ptr6 = vec6.as_ptr().cast::<u8>();
+                    let len6 = vec6.len();
+                    ::core::mem::forget(vec6);
+                    *ptr3.add(12).cast::<usize>() = len6;
+                    *ptr3.add(8).cast::<*mut u8>() = ptr6.cast_mut();
+                    let vec7 = (target_task_id4.into_bytes()).into_boxed_slice();
+                    let ptr7 = vec7.as_ptr().cast::<u8>();
+                    let len7 = vec7.len();
+                    ::core::mem::forget(vec7);
+                    *ptr3.add(20).cast::<usize>() = len7;
+                    *ptr3.add(16).cast::<*mut u8>() = ptr7.cast_mut();
+                    ptr3
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn __post_return_method_tasklist_model_add_transition<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: *mut u8,
+                ) {
+                    let l0 = *arg0.add(0).cast::<*mut u8>();
+                    let l1 = *arg0.add(4).cast::<usize>();
+                    _rt::cabi_dealloc(l0, l1, 1);
+                    let l2 = *arg0.add(8).cast::<*mut u8>();
+                    let l3 = *arg0.add(12).cast::<usize>();
+                    _rt::cabi_dealloc(l2, l3, 1);
+                    let l4 = *arg0.add(16).cast::<*mut u8>();
+                    let l5 = *arg0.add(20).cast::<usize>();
+                    _rt::cabi_dealloc(l4, l5, 1);
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_remove_transition_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    T::remove_transition(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_save_to_file_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    T::save_to_file(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_load_from_file_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    T::load_from_file(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_static_tasklist_model_create_model_for_empty_file_cabi<
+                    T: GuestTasklistModel,
+                >() -> i32 {
+                    let result0 = T::create_model_for_empty_file();
                     (result0).take_handle() as i32
                 }
                 pub trait Guest {
-                    type Hello: GuestHello;
+                    type TasklistModel: GuestTasklistModel;
                 }
-                pub trait GuestHello: 'static {
+                pub trait GuestTasklistModel: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
                     where
@@ -215,9 +659,9 @@ pub mod exports {
 
                         #[cfg(target_arch = "wasm32")]
                         {
-                            #[link(wasm_import_module = "[export]component:hello/hello")]
+                            #[link(wasm_import_module = "[export]component:tasklist/tasklist")]
                             extern "C" {
-                                #[link_name = "[resource-new]hello"]
+                                #[link_name = "[resource-new]tasklist-model"]
                                 fn new(_: *mut u8) -> u32;
                             }
                             new(val)
@@ -234,56 +678,118 @@ pub mod exports {
 
                         #[cfg(target_arch = "wasm32")]
                         {
-                            #[link(wasm_import_module = "[export]component:hello/hello")]
+                            #[link(wasm_import_module = "[export]component:tasklist/tasklist")]
                             extern "C" {
-                                #[link_name = "[resource-rep]hello"]
+                                #[link_name = "[resource-rep]tasklist-model"]
                                 fn rep(_: u32) -> *mut u8;
                             }
                             unsafe { rep(handle) }
                         }
                     }
 
-                    fn calls(&self) -> _rt::String;
-                    fn execute(&self, filename: _rt::String) -> _rt::String;
-                    fn create_world() -> Hello;
+                    fn id(&self) -> _rt::String;
+                    fn tasks(&self) -> _rt::Vec<Task>;
+                    fn transitions(&self) -> _rt::Vec<Transition>;
+                    fn add_task(&self, position: Position) -> Task;
+                    fn remove_task(&self, task_id: _rt::String);
+                    fn resize_task(&self, task_id: _rt::String, size: Size);
+                    fn move_task(&self, task_id: _rt::String, position: Position);
+                    fn add_transition(
+                        &self,
+                        source_task_id: _rt::String,
+                        target_task_id: _rt::String,
+                    ) -> Transition;
+                    fn remove_transition(&self, transition_id: _rt::String);
+                    fn save_to_file(&self, filename: _rt::String);
+                    fn load_from_file(&self, filename: _rt::String);
+                    fn create_model_for_empty_file() -> TasklistModel;
                 }
                 #[doc(hidden)]
 
-                macro_rules! __export_component_hello_hello_cabi{
-    ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
+                macro_rules! __export_component_tasklist_tasklist_cabi{
+  ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
 
-      #[export_name = "component:hello/hello#[method]hello.calls"]
-      unsafe extern "C" fn export_method_hello_calls(arg0: i32,) -> *mut u8 {
-        $($path_to_types)*::_export_method_hello_calls_cabi::<<$ty as $($path_to_types)*::Guest>::Hello>(arg0)
-      }
-      #[export_name = "cabi_post_component:hello/hello#[method]hello.calls"]
-      unsafe extern "C" fn _post_return_method_hello_calls(arg0: *mut u8,) {
-        $($path_to_types)*::__post_return_method_hello_calls::<<$ty as $($path_to_types)*::Guest>::Hello>(arg0)
-      }
-      #[export_name = "component:hello/hello#[method]hello.execute"]
-      unsafe extern "C" fn export_method_hello_execute(arg0: i32,arg1: *mut u8,arg2: usize,) -> *mut u8 {
-        $($path_to_types)*::_export_method_hello_execute_cabi::<<$ty as $($path_to_types)*::Guest>::Hello>(arg0, arg1, arg2)
-      }
-      #[export_name = "cabi_post_component:hello/hello#[method]hello.execute"]
-      unsafe extern "C" fn _post_return_method_hello_execute(arg0: *mut u8,) {
-        $($path_to_types)*::__post_return_method_hello_execute::<<$ty as $($path_to_types)*::Guest>::Hello>(arg0)
-      }
-      #[export_name = "component:hello/hello#[static]hello.create-world"]
-      unsafe extern "C" fn export_static_hello_create_world() -> i32 {
-        $($path_to_types)*::_export_static_hello_create_world_cabi::<<$ty as $($path_to_types)*::Guest>::Hello>()
-      }
-    };);
-  }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.id"]
+    unsafe extern "C" fn export_method_tasklist_model_id(arg0: i32,) -> *mut u8 {
+      $($path_to_types)*::_export_method_tasklist_model_id_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "cabi_post_component:tasklist/tasklist#[method]tasklist-model.id"]
+    unsafe extern "C" fn _post_return_method_tasklist_model_id(arg0: *mut u8,) {
+      $($path_to_types)*::__post_return_method_tasklist_model_id::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.tasks"]
+    unsafe extern "C" fn export_method_tasklist_model_tasks(arg0: i32,) -> *mut u8 {
+      $($path_to_types)*::_export_method_tasklist_model_tasks_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "cabi_post_component:tasklist/tasklist#[method]tasklist-model.tasks"]
+    unsafe extern "C" fn _post_return_method_tasklist_model_tasks(arg0: *mut u8,) {
+      $($path_to_types)*::__post_return_method_tasklist_model_tasks::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.transitions"]
+    unsafe extern "C" fn export_method_tasklist_model_transitions(arg0: i32,) -> *mut u8 {
+      $($path_to_types)*::_export_method_tasklist_model_transitions_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "cabi_post_component:tasklist/tasklist#[method]tasklist-model.transitions"]
+    unsafe extern "C" fn _post_return_method_tasklist_model_transitions(arg0: *mut u8,) {
+      $($path_to_types)*::__post_return_method_tasklist_model_transitions::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.add-task"]
+    unsafe extern "C" fn export_method_tasklist_model_add_task(arg0: i32,arg1: i32,arg2: i32,) -> *mut u8 {
+      $($path_to_types)*::_export_method_tasklist_model_add_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
+    }
+    #[export_name = "cabi_post_component:tasklist/tasklist#[method]tasklist-model.add-task"]
+    unsafe extern "C" fn _post_return_method_tasklist_model_add_task(arg0: *mut u8,) {
+      $($path_to_types)*::__post_return_method_tasklist_model_add_task::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.remove-task"]
+    unsafe extern "C" fn export_method_tasklist_model_remove_task(arg0: i32,arg1: *mut u8,arg2: usize,) {
+      $($path_to_types)*::_export_method_tasklist_model_remove_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.resize-task"]
+    unsafe extern "C" fn export_method_tasklist_model_resize_task(arg0: i32,arg1: *mut u8,arg2: usize,arg3: i32,arg4: i32,) {
+      $($path_to_types)*::_export_method_tasklist_model_resize_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2, arg3, arg4)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.move-task"]
+    unsafe extern "C" fn export_method_tasklist_model_move_task(arg0: i32,arg1: *mut u8,arg2: usize,arg3: i32,arg4: i32,) {
+      $($path_to_types)*::_export_method_tasklist_model_move_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2, arg3, arg4)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.add-transition"]
+    unsafe extern "C" fn export_method_tasklist_model_add_transition(arg0: i32,arg1: *mut u8,arg2: usize,arg3: *mut u8,arg4: usize,) -> *mut u8 {
+      $($path_to_types)*::_export_method_tasklist_model_add_transition_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2, arg3, arg4)
+    }
+    #[export_name = "cabi_post_component:tasklist/tasklist#[method]tasklist-model.add-transition"]
+    unsafe extern "C" fn _post_return_method_tasklist_model_add_transition(arg0: *mut u8,) {
+      $($path_to_types)*::__post_return_method_tasklist_model_add_transition::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.remove-transition"]
+    unsafe extern "C" fn export_method_tasklist_model_remove_transition(arg0: i32,arg1: *mut u8,arg2: usize,) {
+      $($path_to_types)*::_export_method_tasklist_model_remove_transition_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.save-to-file"]
+    unsafe extern "C" fn export_method_tasklist_model_save_to_file(arg0: i32,arg1: *mut u8,arg2: usize,) {
+      $($path_to_types)*::_export_method_tasklist_model_save_to_file_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.load-from-file"]
+    unsafe extern "C" fn export_method_tasklist_model_load_from_file(arg0: i32,arg1: *mut u8,arg2: usize,) {
+      $($path_to_types)*::_export_method_tasklist_model_load_from_file_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
+    }
+    #[export_name = "component:tasklist/tasklist#[static]tasklist-model.create-model-for-empty-file"]
+    unsafe extern "C" fn export_static_tasklist_model_create_model_for_empty_file() -> i32 {
+      $($path_to_types)*::_export_static_tasklist_model_create_model_for_empty_file_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>()
+    }
+  };);
+}
                 #[doc(hidden)]
-                pub(crate) use __export_component_hello_hello_cabi;
+                pub(crate) use __export_component_tasklist_tasklist_cabi;
                 #[repr(align(4))]
-                struct _RetArea([::core::mem::MaybeUninit<u8>; 8]);
-                static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 8]);
+                struct _RetArea([::core::mem::MaybeUninit<u8>; 36]);
+                static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 36]);
             }
         }
     }
 }
 mod _rt {
+    pub use alloc_crate::string::String;
 
     use core::fmt;
     use core::marker;
@@ -386,7 +892,77 @@ mod _rt {
         let layout = alloc::Layout::from_size_align_unchecked(size, align);
         alloc::dealloc(ptr as *mut u8, layout);
     }
-    pub use alloc_crate::string::String;
+
+    pub fn as_i32<T: AsI32>(t: T) -> i32 {
+        t.as_i32()
+    }
+
+    pub trait AsI32 {
+        fn as_i32(self) -> i32;
+    }
+
+    impl<'a, T: Copy + AsI32> AsI32 for &'a T {
+        fn as_i32(self) -> i32 {
+            (*self).as_i32()
+        }
+    }
+
+    impl AsI32 for i32 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for u32 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for i16 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for u16 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for i8 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for u8 {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for char {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+
+    impl AsI32 for usize {
+        #[inline]
+        fn as_i32(self) -> i32 {
+            self as i32
+        }
+    }
+    pub use alloc_crate::alloc;
     pub use alloc_crate::vec::Vec;
     pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
         if cfg!(debug_assertions) {
@@ -396,7 +972,6 @@ mod _rt {
         }
     }
     extern crate alloc as alloc_crate;
-    pub use alloc_crate::alloc;
 }
 
 /// Generates `#[no_mangle]` functions to export the specified type as the
@@ -421,7 +996,7 @@ mod _rt {
 macro_rules! __export_example_impl {
   ($ty:ident) => (self::export!($ty with_types_in self););
   ($ty:ident with_types_in $($path_to_types_root:tt)*) => (
-  $($path_to_types_root)*::exports::component::hello::hello::__export_component_hello_hello_cabi!($ty with_types_in $($path_to_types_root)*::exports::component::hello::hello);
+  $($path_to_types_root)*::exports::component::tasklist::tasklist::__export_component_tasklist_tasklist_cabi!($ty with_types_in $($path_to_types_root)*::exports::component::tasklist::tasklist);
   )
 }
 #[doc(inline)]
@@ -430,14 +1005,28 @@ pub(crate) use __export_example_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.21.0:example:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 323] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xc5\x01\x01A\x02\x01\
-A\x02\x01B\x09\x04\0\x05hello\x03\x01\x01h\0\x01@\x01\x04self\x01\0s\x04\0\x13[m\
-ethod]hello.calls\x01\x02\x01@\x02\x04self\x01\x08filenames\0s\x04\0\x15[method]\
-hello.execute\x01\x03\x01i\0\x01@\0\0\x04\x04\0\x1a[static]hello.create-world\x01\
-\x05\x04\x01\x15component:hello/hello\x05\0\x04\x01\x17component:hello/example\x04\
-\0\x0b\x0d\x01\0\x07example\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dw\
-it-component\x070.201.0\x10wit-bindgen-rust\x060.21.0";
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1079] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb9\x07\x01A\x02\x01\
+A\x02\x01B%\x01r\x02\x01xy\x01yy\x04\0\x08position\x03\0\0\x01r\x02\x05widthy\x06\
+heighty\x04\0\x04size\x03\0\x02\x01k\x03\x01r\x04\x02ids\x04names\x08position\x01\
+\x04size\x04\x04\0\x04task\x03\0\x05\x01r\x03\x02ids\x0esource-task-ids\x0etarge\
+t-task-ids\x04\0\x0atransition\x03\0\x07\x04\0\x0etasklist-model\x03\x01\x01h\x09\
+\x01@\x01\x04self\x0a\0s\x04\0\x19[method]tasklist-model.id\x01\x0b\x01p\x06\x01\
+@\x01\x04self\x0a\0\x0c\x04\0\x1c[method]tasklist-model.tasks\x01\x0d\x01p\x08\x01\
+@\x01\x04self\x0a\0\x0e\x04\0\"[method]tasklist-model.transitions\x01\x0f\x01@\x02\
+\x04self\x0a\x08position\x01\0\x06\x04\0\x1f[method]tasklist-model.add-task\x01\x10\
+\x01@\x02\x04self\x0a\x07task-ids\x01\0\x04\0\"[method]tasklist-model.remove-tas\
+k\x01\x11\x01@\x03\x04self\x0a\x07task-ids\x04size\x03\x01\0\x04\0\"[method]task\
+list-model.resize-task\x01\x12\x01@\x03\x04self\x0a\x07task-ids\x08position\x01\x01\
+\0\x04\0\x20[method]tasklist-model.move-task\x01\x13\x01@\x03\x04self\x0a\x0esou\
+rce-task-ids\x0etarget-task-ids\0\x08\x04\0%[method]tasklist-model.add-transitio\
+n\x01\x14\x01@\x02\x04self\x0a\x0dtransition-ids\x01\0\x04\0([method]tasklist-mo\
+del.remove-transition\x01\x15\x01@\x02\x04self\x0a\x08filenames\x01\0\x04\0#[met\
+hod]tasklist-model.save-to-file\x01\x16\x04\0%[method]tasklist-model.load-from-f\
+ile\x01\x16\x01i\x09\x01@\0\0\x17\x04\02[static]tasklist-model.create-model-for-\
+empty-file\x01\x18\x04\x01\x1bcomponent:tasklist/tasklist\x05\0\x04\x01\x1acompo\
+nent:tasklist/example\x04\0\x0b\x0d\x01\0\x07example\x03\0\0\0G\x09producers\x01\
+\x0cprocessed-by\x02\x0dwit-component\x070.201.0\x10wit-bindgen-rust\x060.21.0";
 
 #[inline(never)]
 #[doc(hidden)]

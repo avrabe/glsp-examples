@@ -29,7 +29,6 @@ import {
     SourceModelStorage
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { hello } from '../database/hello.js';
 import { CreateTaskHandler } from '../handler/create-task-node-handler.js';
 import { CreateTransitionHandler } from '../handler/create-transition-handler.js';
 import { DeleteElementHandler } from '../handler/delete-element-handler.js';
@@ -45,40 +44,33 @@ import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration.j
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
     readonly diagramType = 'tasklist-diagram';
-    private world = hello.Hello.createWorld();
 
     public log(msg: string) {
         console.log(msg);
     }
 
     protected bindDiagramConfiguration(): BindingTarget<DiagramConfiguration> {
-        this.log(this.world.calls());
         return TaskListDiagramConfiguration;
     }
 
     protected bindSourceModelStorage(): BindingTarget<SourceModelStorage> {
-        this.log(this.world.calls());
         return TaskListStorage;
     }
 
     protected bindModelState(): BindingTarget<ModelState> {
-        this.log(this.world.calls());
         return { service: TaskListModelState };
     }
 
     protected bindGModelFactory(): BindingTarget<GModelFactory> {
-        this.log(this.world.calls());
         return TaskListGModelFactory;
     }
 
     protected override configureActionHandlers(binding: InstanceMultiBinding<ActionHandlerConstructor>): void {
-        this.log(this.world.calls());
         super.configureActionHandlers(binding);
         binding.add(ComputedBoundsActionHandler);
     }
 
     protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {
-        this.log(this.world.calls());
         super.configureOperationHandlers(binding);
         binding.add(CreateTaskHandler);
         binding.add(CreateTransitionHandler);
@@ -88,13 +80,11 @@ export class TaskListDiagramModule extends DiagramModule {
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {
-        this.log(this.world.calls());
         this.context.bind(TaskListModelIndex).toSelf().inSingletonScope();
         return { service: TaskListModelIndex };
     }
 
     protected override bindLabelEditValidator(): BindingTarget<LabelEditValidator> | undefined {
-        this.log(this.world.calls());
         return TaskListLabelEditValidator;
     }
 }
