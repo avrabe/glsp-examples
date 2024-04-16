@@ -34,6 +34,7 @@ export class CreateTransitionHandler extends JsonCreateEdgeOperationHandler {
                 sourceTaskId: operation.sourceElementId,
                 targetTaskId: operation.targetElementId
             };
+            this.modelState.worldModel.addTransition(operation.sourceElementId, operation.targetElementId);
             this.modelState.sourceModel.transitions.push(transition);
         });
     }

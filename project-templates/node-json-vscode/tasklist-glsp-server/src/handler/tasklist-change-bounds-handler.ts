@@ -33,6 +33,10 @@ export class TaskListChangeBoundsHandler extends JsonOperationHandler {
     }
 
     protected changeElementBounds(elementId: string, newSize: Dimension, newPosition?: Point): void {
+        this.modelState.worldModel.resizeTask(elementId, newSize);
+        if (newPosition) {
+            this.modelState.worldModel.moveTask(elementId, newPosition);
+        }
         const index = this.modelState.index;
         const taskNode = index.findByClass(elementId, GNode);
         const task = taskNode ? index.findTask(taskNode.id) : undefined;

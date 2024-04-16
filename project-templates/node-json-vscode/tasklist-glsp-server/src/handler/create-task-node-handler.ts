@@ -38,6 +38,8 @@ export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
             const relativeLocation = this.getRelativeLocation(operation) ?? Point.ORIGIN;
+            this.modelState.worldModel.addTask(relativeLocation);
+
             const task = this.createTask(relativeLocation);
             const taskList = this.modelState.sourceModel;
             taskList.tasks.push(task);

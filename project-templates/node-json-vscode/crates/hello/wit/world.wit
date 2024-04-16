@@ -3,13 +3,13 @@ package component:tasklist;
 interface tasklist {
 
     record position {
-        x: u32,
-        y: u32,
+        x: float32,
+        y: float32,
     }
 
     record size {
-        width: u32,
-        height: u32,
+        width: float32,
+        height: float32,
     }
 
     record task {
@@ -34,6 +34,7 @@ interface tasklist {
         remove-task: func(task-id: string);
         resize-task: func(task-id: string, size: size);
         move-task: func(task-id: string, position: position);
+        set-task-name: func(task-id: string, label: string);
 
         add-transition: func(source-task-id: string, target-task-id: string) -> transition;
         remove-transition: func(transition-id: string);

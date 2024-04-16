@@ -14,8 +14,8 @@ pub mod exports {
                 #[repr(C)]
                 #[derive(Clone, Copy)]
                 pub struct Position {
-                    pub x: u32,
-                    pub y: u32,
+                    pub x: f32,
+                    pub y: f32,
                 }
                 impl ::core::fmt::Debug for Position {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -28,8 +28,8 @@ pub mod exports {
                 #[repr(C)]
                 #[derive(Clone, Copy)]
                 pub struct Size {
-                    pub width: u32,
-                    pub height: u32,
+                    pub width: f32,
+                    pub height: f32,
                 }
                 impl ::core::fmt::Debug for Size {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -273,8 +273,8 @@ pub mod exports {
                             *base.add(12).cast::<usize>() = len4;
                             *base.add(8).cast::<*mut u8>() = ptr4.cast_mut();
                             let Position { x: x5, y: y5 } = position2;
-                            *base.add(16).cast::<i32>() = _rt::as_i32(x5);
-                            *base.add(20).cast::<i32>() = _rt::as_i32(y5);
+                            *base.add(16).cast::<f32>() = _rt::as_f32(x5);
+                            *base.add(20).cast::<f32>() = _rt::as_f32(y5);
                             match size2 {
                                 Some(e) => {
                                     *base.add(24).cast::<u8>() = (1i32) as u8;
@@ -282,8 +282,8 @@ pub mod exports {
                                         width: width6,
                                         height: height6,
                                     } = e;
-                                    *base.add(28).cast::<i32>() = _rt::as_i32(width6);
-                                    *base.add(32).cast::<i32>() = _rt::as_i32(height6);
+                                    *base.add(28).cast::<f32>() = _rt::as_f32(width6);
+                                    *base.add(32).cast::<f32>() = _rt::as_f32(height6);
                                 }
                                 None => {
                                     *base.add(24).cast::<u8>() = (0i32) as u8;
@@ -404,15 +404,12 @@ pub mod exports {
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_method_tasklist_model_add_task_cabi<T: GuestTasklistModel>(
                     arg0: i32,
-                    arg1: i32,
-                    arg2: i32,
+                    arg1: f32,
+                    arg2: f32,
                 ) -> *mut u8 {
                     let result0 = T::add_task(
                         TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
-                        Position {
-                            x: arg1 as u32,
-                            y: arg2 as u32,
-                        },
+                        Position { x: arg1, y: arg2 },
                     );
                     let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
                     let Task {
@@ -434,8 +431,8 @@ pub mod exports {
                     *ptr1.add(12).cast::<usize>() = len4;
                     *ptr1.add(8).cast::<*mut u8>() = ptr4.cast_mut();
                     let Position { x: x5, y: y5 } = position2;
-                    *ptr1.add(16).cast::<i32>() = _rt::as_i32(x5);
-                    *ptr1.add(20).cast::<i32>() = _rt::as_i32(y5);
+                    *ptr1.add(16).cast::<f32>() = _rt::as_f32(x5);
+                    *ptr1.add(20).cast::<f32>() = _rt::as_f32(y5);
                     match size2 {
                         Some(e) => {
                             *ptr1.add(24).cast::<u8>() = (1i32) as u8;
@@ -443,8 +440,8 @@ pub mod exports {
                                 width: width6,
                                 height: height6,
                             } = e;
-                            *ptr1.add(28).cast::<i32>() = _rt::as_i32(width6);
-                            *ptr1.add(32).cast::<i32>() = _rt::as_i32(height6);
+                            *ptr1.add(28).cast::<f32>() = _rt::as_f32(width6);
+                            *ptr1.add(32).cast::<f32>() = _rt::as_f32(height6);
                         }
                         None => {
                             *ptr1.add(24).cast::<u8>() = (0i32) as u8;
@@ -490,8 +487,8 @@ pub mod exports {
                     arg0: i32,
                     arg1: *mut u8,
                     arg2: usize,
-                    arg3: i32,
-                    arg4: i32,
+                    arg3: f32,
+                    arg4: f32,
                 ) {
                     let len0 = arg2;
                     let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
@@ -499,8 +496,8 @@ pub mod exports {
                         TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
                         _rt::string_lift(bytes0),
                         Size {
-                            width: arg3 as u32,
-                            height: arg4 as u32,
+                            width: arg3,
+                            height: arg4,
                         },
                     );
                 }
@@ -512,18 +509,36 @@ pub mod exports {
                     arg0: i32,
                     arg1: *mut u8,
                     arg2: usize,
-                    arg3: i32,
-                    arg4: i32,
+                    arg3: f32,
+                    arg4: f32,
                 ) {
                     let len0 = arg2;
                     let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
                     T::move_task(
                         TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
                         _rt::string_lift(bytes0),
-                        Position {
-                            x: arg3 as u32,
-                            y: arg4 as u32,
-                        },
+                        Position { x: arg3, y: arg4 },
+                    );
+                }
+                #[doc(hidden)]
+                #[allow(non_snake_case)]
+                pub unsafe fn _export_method_tasklist_model_set_task_name_cabi<
+                    T: GuestTasklistModel,
+                >(
+                    arg0: i32,
+                    arg1: *mut u8,
+                    arg2: usize,
+                    arg3: *mut u8,
+                    arg4: usize,
+                ) {
+                    let len0 = arg2;
+                    let bytes0 = _rt::Vec::from_raw_parts(arg1.cast(), len0, len0);
+                    let len1 = arg4;
+                    let bytes1 = _rt::Vec::from_raw_parts(arg3.cast(), len1, len1);
+                    T::set_task_name(
+                        TasklistModelBorrow::lift(arg0 as u32 as usize).get(),
+                        _rt::string_lift(bytes0),
+                        _rt::string_lift(bytes1),
                     );
                 }
                 #[doc(hidden)]
@@ -694,6 +709,7 @@ pub mod exports {
                     fn remove_task(&self, task_id: _rt::String);
                     fn resize_task(&self, task_id: _rt::String, size: Size);
                     fn move_task(&self, task_id: _rt::String, position: Position);
+                    fn set_task_name(&self, task_id: _rt::String, label: _rt::String);
                     fn add_transition(
                         &self,
                         source_task_id: _rt::String,
@@ -734,7 +750,7 @@ pub mod exports {
       $($path_to_types)*::__post_return_method_tasklist_model_transitions::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0)
     }
     #[export_name = "component:tasklist/tasklist#[method]tasklist-model.add-task"]
-    unsafe extern "C" fn export_method_tasklist_model_add_task(arg0: i32,arg1: i32,arg2: i32,) -> *mut u8 {
+    unsafe extern "C" fn export_method_tasklist_model_add_task(arg0: i32,arg1: f32,arg2: f32,) -> *mut u8 {
       $($path_to_types)*::_export_method_tasklist_model_add_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
     }
     #[export_name = "cabi_post_component:tasklist/tasklist#[method]tasklist-model.add-task"]
@@ -746,12 +762,16 @@ pub mod exports {
       $($path_to_types)*::_export_method_tasklist_model_remove_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2)
     }
     #[export_name = "component:tasklist/tasklist#[method]tasklist-model.resize-task"]
-    unsafe extern "C" fn export_method_tasklist_model_resize_task(arg0: i32,arg1: *mut u8,arg2: usize,arg3: i32,arg4: i32,) {
+    unsafe extern "C" fn export_method_tasklist_model_resize_task(arg0: i32,arg1: *mut u8,arg2: usize,arg3: f32,arg4: f32,) {
       $($path_to_types)*::_export_method_tasklist_model_resize_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2, arg3, arg4)
     }
     #[export_name = "component:tasklist/tasklist#[method]tasklist-model.move-task"]
-    unsafe extern "C" fn export_method_tasklist_model_move_task(arg0: i32,arg1: *mut u8,arg2: usize,arg3: i32,arg4: i32,) {
+    unsafe extern "C" fn export_method_tasklist_model_move_task(arg0: i32,arg1: *mut u8,arg2: usize,arg3: f32,arg4: f32,) {
       $($path_to_types)*::_export_method_tasklist_model_move_task_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2, arg3, arg4)
+    }
+    #[export_name = "component:tasklist/tasklist#[method]tasklist-model.set-task-name"]
+    unsafe extern "C" fn export_method_tasklist_model_set_task_name(arg0: i32,arg1: *mut u8,arg2: usize,arg3: *mut u8,arg4: usize,) {
+      $($path_to_types)*::_export_method_tasklist_model_set_task_name_cabi::<<$ty as $($path_to_types)*::Guest>::TasklistModel>(arg0, arg1, arg2, arg3, arg4)
     }
     #[export_name = "component:tasklist/tasklist#[method]tasklist-model.add-transition"]
     unsafe extern "C" fn export_method_tasklist_model_add_transition(arg0: i32,arg1: *mut u8,arg2: usize,arg3: *mut u8,arg4: usize,) -> *mut u8 {
@@ -893,73 +913,24 @@ mod _rt {
         alloc::dealloc(ptr as *mut u8, layout);
     }
 
-    pub fn as_i32<T: AsI32>(t: T) -> i32 {
-        t.as_i32()
+    pub fn as_f32<T: AsF32>(t: T) -> f32 {
+        t.as_f32()
     }
 
-    pub trait AsI32 {
-        fn as_i32(self) -> i32;
+    pub trait AsF32 {
+        fn as_f32(self) -> f32;
     }
 
-    impl<'a, T: Copy + AsI32> AsI32 for &'a T {
-        fn as_i32(self) -> i32 {
-            (*self).as_i32()
+    impl<'a, T: Copy + AsF32> AsF32 for &'a T {
+        fn as_f32(self) -> f32 {
+            (*self).as_f32()
         }
     }
 
-    impl AsI32 for i32 {
+    impl AsF32 for f32 {
         #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for u32 {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for i16 {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for u16 {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for i8 {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for u8 {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for char {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
-        }
-    }
-
-    impl AsI32 for usize {
-        #[inline]
-        fn as_i32(self) -> i32 {
-            self as i32
+        fn as_f32(self) -> f32 {
+            self as f32
         }
     }
     pub use alloc_crate::alloc;
@@ -1005,10 +976,10 @@ pub(crate) use __export_example_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.21.0:example:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1079] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb9\x07\x01A\x02\x01\
-A\x02\x01B%\x01r\x02\x01xy\x01yy\x04\0\x08position\x03\0\0\x01r\x02\x05widthy\x06\
-heighty\x04\0\x04size\x03\0\x02\x01k\x03\x01r\x04\x02ids\x04names\x08position\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1147] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xfd\x07\x01A\x02\x01\
+A\x02\x01B'\x01r\x02\x01xv\x01yv\x04\0\x08position\x03\0\0\x01r\x02\x05widthv\x06\
+heightv\x04\0\x04size\x03\0\x02\x01k\x03\x01r\x04\x02ids\x04names\x08position\x01\
 \x04size\x04\x04\0\x04task\x03\0\x05\x01r\x03\x02ids\x0esource-task-ids\x0etarge\
 t-task-ids\x04\0\x0atransition\x03\0\x07\x04\0\x0etasklist-model\x03\x01\x01h\x09\
 \x01@\x01\x04self\x0a\0s\x04\0\x19[method]tasklist-model.id\x01\x0b\x01p\x06\x01\
@@ -1018,15 +989,17 @@ t-task-ids\x04\0\x0atransition\x03\0\x07\x04\0\x0etasklist-model\x03\x01\x01h\x0
 \x01@\x02\x04self\x0a\x07task-ids\x01\0\x04\0\"[method]tasklist-model.remove-tas\
 k\x01\x11\x01@\x03\x04self\x0a\x07task-ids\x04size\x03\x01\0\x04\0\"[method]task\
 list-model.resize-task\x01\x12\x01@\x03\x04self\x0a\x07task-ids\x08position\x01\x01\
-\0\x04\0\x20[method]tasklist-model.move-task\x01\x13\x01@\x03\x04self\x0a\x0esou\
-rce-task-ids\x0etarget-task-ids\0\x08\x04\0%[method]tasklist-model.add-transitio\
-n\x01\x14\x01@\x02\x04self\x0a\x0dtransition-ids\x01\0\x04\0([method]tasklist-mo\
-del.remove-transition\x01\x15\x01@\x02\x04self\x0a\x08filenames\x01\0\x04\0#[met\
-hod]tasklist-model.save-to-file\x01\x16\x04\0%[method]tasklist-model.load-from-f\
-ile\x01\x16\x01i\x09\x01@\0\0\x17\x04\02[static]tasklist-model.create-model-for-\
-empty-file\x01\x18\x04\x01\x1bcomponent:tasklist/tasklist\x05\0\x04\x01\x1acompo\
-nent:tasklist/example\x04\0\x0b\x0d\x01\0\x07example\x03\0\0\0G\x09producers\x01\
-\x0cprocessed-by\x02\x0dwit-component\x070.201.0\x10wit-bindgen-rust\x060.21.0";
+\0\x04\0\x20[method]tasklist-model.move-task\x01\x13\x01@\x03\x04self\x0a\x07tas\
+k-ids\x05labels\x01\0\x04\0$[method]tasklist-model.set-task-name\x01\x14\x01@\x03\
+\x04self\x0a\x0esource-task-ids\x0etarget-task-ids\0\x08\x04\0%[method]tasklist-\
+model.add-transition\x01\x15\x01@\x02\x04self\x0a\x0dtransition-ids\x01\0\x04\0(\
+[method]tasklist-model.remove-transition\x01\x16\x01@\x02\x04self\x0a\x08filenam\
+es\x01\0\x04\0#[method]tasklist-model.save-to-file\x01\x17\x04\0%[method]tasklis\
+t-model.load-from-file\x01\x17\x01i\x09\x01@\0\0\x18\x04\02[static]tasklist-mode\
+l.create-model-for-empty-file\x01\x19\x04\x01\x1bcomponent:tasklist/tasklist\x05\
+\0\x04\x01\x1acomponent:tasklist/example\x04\0\x0b\x0d\x01\0\x07example\x03\0\0\0\
+G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.201.0\x10wit-bindge\
+n-rust\x060.21.0";
 
 #[inline(never)]
 #[doc(hidden)]

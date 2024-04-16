@@ -35,13 +35,13 @@ struct Task {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Size {
-    width: u32,
-    height: u32,
+    width: f32,
+    height: f32,
 }
 #[derive(Serialize, Deserialize, Debug)]
 struct Position {
-    x: u32,
-    y: u32,
+    x: f32,
+    y: f32,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -121,17 +121,18 @@ impl GuestTasklistModel for TaskListComponent {
     ) -> component::tasklist::tasklist::Task {
         let mut tl = self.calls.borrow_mut();
         let id = Uuid::new_v4().to_string();
+        let label = format!("New Task {}", tl.tasks.as_ref().unwrap().len());
         if let Some(tasks) = &mut tl.tasks {
             let task = Task {
                 id: id.clone(),
-                name: String::from("New Task"),
+                name: label.clone(),
                 position: Position {
                     x: position.x,
                     y: position.y,
                 },
                 size: Size {
-                    width: 100,
-                    height: 100,
+                    width: 100.0,
+                    height: 100.0,
                 },
             };
             tasks.push(task);
@@ -139,7 +140,7 @@ impl GuestTasklistModel for TaskListComponent {
 
         let task = component::tasklist::tasklist::Task {
             id: id,
-            name: String::from("New Task"),
+            name: label,
             position,
             size: None,
         };
@@ -177,6 +178,18 @@ impl GuestTasklistModel for TaskListComponent {
                         x: position.x,
                         y: position.y,
                     };
+                    break;
+                }
+            }
+        }
+    }
+
+    fn set_task_name(&self, task_id: String, label: String) {
+        let mut tl = self.calls.borrow_mut();
+        if let Some(tasks) = &mut tl.tasks {
+            for task in tasks {
+                if task.id == task_id {
+                    task.name = label;
                     break;
                 }
             }
@@ -284,7 +297,7 @@ mod tests {
     #[test]
     fn test_add_task() {
         let component = TaskListComponent::default();
-        let task = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 0.0, y: 0.0 });
 
         assert_eq!(component.tasks().len(), 1);
         assert_eq!(component.tasks()[0].id, task.id);
@@ -293,7 +306,7 @@ mod tests {
     #[test]
     fn test_remove_task() {
         let component = TaskListComponent::default();
-        let task = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 0.0, y: 0.0 });
         component.remove_task(task.id.clone());
 
         assert!(component.tasks().is_empty());
@@ -302,19 +315,19 @@ mod tests {
     #[test]
     fn test_resize_task() {
         let component = TaskListComponent::default();
-        let task = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 0.0, y: 0.0 });
         component.resize_task(
             task.id.clone(),
             component::tasklist::tasklist::Size {
-                width: 2,
-                height: 3,
+                width: 2.0,
+                height: 3.0,
             },
         );
 
         let f = component.tasks()[0].size.unwrap();
         let b = Some(component::tasklist::tasklist::Size {
-            width: 2,
-            height: 3,
+            width: 2.0,
+            height: 3.0,
         })
         .unwrap();
         assert_eq!(f.height, b.height);
@@ -324,21 +337,22 @@ mod tests {
     #[test]
     fn test_move_task() {
         let component = TaskListComponent::default();
-        let task = component.add_task(component::tasklist::tasklist::Position { x: 1, y: 1 });
+        let task =
+            component.add_task(component::tasklist::tasklist::Position { x: 100.0, y: 100.0 });
         component.move_task(
             task.id.clone(),
-            component::tasklist::tasklist::Position { x: 0, y: 0 },
+            component::tasklist::tasklist::Position { x: 0.0, y: 0.0 },
         );
 
-        assert_eq!(component.tasks()[0].position.x, 0);
-        assert_eq!(component.tasks()[0].position.x, 0);
+        assert_eq!(component.tasks()[0].position.x, 0.0);
+        assert_eq!(component.tasks()[0].position.x, 0.0);
     }
 
     #[test]
     fn test_add_transition() {
         let component = TaskListComponent::default();
-        let task1 = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
-        let task2 = component.add_task(component::tasklist::tasklist::Position { x: 1, y: 1 });
+        let task1 = component.add_task(component::tasklist::tasklist::Position { x: 0.0, y: 0.0 });
+        let task2 = component.add_task(component::tasklist::tasklist::Position { x: 1.0, y: 1.0 });
         let transition = component.add_transition(task1.id.clone(), task2.id.clone());
 
         assert_eq!(component.transitions().len(), 1);
@@ -348,8 +362,8 @@ mod tests {
     #[test]
     fn test_remove_transition() {
         let component = TaskListComponent::default();
-        let task1 = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
-        let task2 = component.add_task(component::tasklist::tasklist::Position { x: 1, y: 1 });
+        let task1 = component.add_task(component::tasklist::tasklist::Position { x: 0.0, y: 0.0 });
+        let task2 = component.add_task(component::tasklist::tasklist::Position { x: 1.0, y: 1.0 });
         let transition = component.add_transition(task1.id.clone(), task2.id.clone());
         component.remove_transition(transition.id.clone());
 

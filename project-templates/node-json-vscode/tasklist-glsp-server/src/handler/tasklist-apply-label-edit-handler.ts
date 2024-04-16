@@ -28,6 +28,7 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
 
     override createCommand(operation: ApplyLabelEditOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
+            this.modelState.worldModel.setTaskName(operation.labelId, operation.text);
             const index = this.modelState.index;
             // Retrieve the parent node of the label that should be edited
             const taskNode = index.findParentElement(operation.labelId, toTypeGuard(GNode));
