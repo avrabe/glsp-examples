@@ -34,15 +34,14 @@ struct Task {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Position {
-    x: f64,
-    y: f64,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 struct Size {
-    width: f64,
-    height: f64,
+    width: u32,
+    height: u32,
+}
+#[derive(Serialize, Deserialize, Debug)]
+struct Position {
+    x: u32,
+    y: u32,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -53,6 +52,23 @@ struct Transition {
     #[serde(rename = "targetTaskId")]
     target_task_id: String,
 }
+impl Default for TaskList {
+    fn default() -> Self {
+        Self {
+            id: Uuid::new_v4().to_string(),
+            tasks: Some(vec![]),
+            transitions: Some(vec![]),
+        }
+    }
+}
+
+impl TaskListComponent {
+    fn default() -> Self {
+        Self {
+            calls: RefCell::new(TaskList::default()),
+        }
+    }
+}
 
 impl GuestTasklistModel for TaskListComponent {
     fn id(&self) -> String {
@@ -60,30 +76,111 @@ impl GuestTasklistModel for TaskListComponent {
     }
 
     fn tasks(&self) -> Vec<component::tasklist::tasklist::Task> {
-        todo!()
+        let tl = self.calls.borrow_mut();
+
+        let foo = tl
+            .tasks
+            .as_deref()
+            .unwrap_or_default()
+            .into_iter()
+            .map(|task| component::tasklist::tasklist::Task {
+                id: task.id.clone(),
+                name: task.name.clone(),
+                position: component::tasklist::tasklist::Position {
+                    x: task.position.x,
+                    y: task.position.y,
+                },
+                size: Some(component::tasklist::tasklist::Size {
+                    width: task.size.width,
+                    height: task.size.height,
+                }),
+            });
+        let b = foo.collect();
+        b
     }
 
     fn transitions(&self) -> Vec<component::tasklist::tasklist::Transition> {
-        todo!()
+        let tl = self.calls.borrow_mut();
+        let foo = tl
+            .transitions
+            .as_deref()
+            .unwrap_or_default()
+            .into_iter()
+            .map(|transition| component::tasklist::tasklist::Transition {
+                id: transition.id.clone(),
+                source_task_id: transition.source_task_id.clone(),
+                target_task_id: transition.target_task_id.clone(),
+            });
+        let b = foo.collect();
+        b
     }
 
     fn add_task(
         &self,
         position: component::tasklist::tasklist::Position,
     ) -> component::tasklist::tasklist::Task {
-        todo!()
+        let mut tl = self.calls.borrow_mut();
+        let id = Uuid::new_v4().to_string();
+        if let Some(tasks) = &mut tl.tasks {
+            let task = Task {
+                id: id.clone(),
+                name: String::from("New Task"),
+                position: Position {
+                    x: position.x,
+                    y: position.y,
+                },
+                size: Size {
+                    width: 100,
+                    height: 100,
+                },
+            };
+            tasks.push(task);
+        }
+
+        let task = component::tasklist::tasklist::Task {
+            id: id,
+            name: String::from("New Task"),
+            position,
+            size: None,
+        };
+        task
     }
 
     fn remove_task(&self, task_id: String) {
-        todo!()
+        let mut tl = self.calls.borrow_mut();
+        if let Some(tasks) = &mut tl.tasks {
+            tasks.retain(|task| task.id != task_id);
+        }
     }
 
     fn resize_task(&self, task_id: String, size: component::tasklist::tasklist::Size) {
-        todo!()
+        let mut tl = self.calls.borrow_mut();
+        if let Some(tasks) = &mut tl.tasks {
+            for task in tasks {
+                if task.id == task_id {
+                    task.size = Size {
+                        width: size.width,
+                        height: size.height,
+                    };
+                    break;
+                }
+            }
+        }
     }
 
     fn move_task(&self, task_id: String, position: component::tasklist::tasklist::Position) {
-        todo!()
+        let mut tl = self.calls.borrow_mut();
+        if let Some(tasks) = &mut tl.tasks {
+            for task in tasks {
+                if task.id == task_id {
+                    task.position = Position {
+                        x: position.x,
+                        y: position.y,
+                    };
+                    break;
+                }
+            }
+        }
     }
 
     fn add_transition(
@@ -91,11 +188,30 @@ impl GuestTasklistModel for TaskListComponent {
         source_task_id: String,
         target_task_id: String,
     ) -> component::tasklist::tasklist::Transition {
-        todo!()
+        let id = Uuid::new_v4().to_string();
+
+        let mut tl = self.calls.borrow_mut();
+        if let Some(transitions) = &mut tl.transitions {
+            let transition = Transition {
+                id: id.clone(),
+                source_task_id: source_task_id.clone(),
+                target_task_id: target_task_id.clone(),
+            };
+            transitions.push(transition);
+        }
+        let transition = component::tasklist::tasklist::Transition {
+            id,
+            source_task_id,
+            target_task_id,
+        };
+        transition
     }
 
     fn remove_transition(&self, transition_id: String) {
-        todo!()
+        let mut tl = self.calls.borrow_mut();
+        if let Some(transitions) = &mut tl.transitions {
+            transitions.retain(|transition| transition.id != transition_id);
+        }
     }
 
     fn save_to_file(&self, filename: String) {
@@ -124,25 +240,119 @@ impl GuestTasklistModel for TaskListComponent {
             }
             Err(err) => {
                 println!("Error deserializing task list, return new empty: {:?}", err);
-                self.calls.replace(TaskList {
-                    id: Uuid::new_v4().to_string(),
-                    tasks: Some(Vec::new()),
-                    transitions: Some(Vec::new()),
-                });
+                self.calls.replace(TaskList::default());
             }
         }
     }
 
     fn create_model_for_empty_file() -> TasklistModel {
-        let tl = TaskListComponent {
-            calls: RefCell::new(TaskList {
-                id: Uuid::new_v4().to_string(),
-                tasks: Some(Vec::new()),
-                transitions: Some(Vec::new()),
-            }),
-        };
+        let tl = TaskListComponent::default();
         component::tasklist::tasklist::TasklistModel::new(tl)
     }
 }
 
 bindings::export!(TasklistModel with_types_in bindings);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_id() {
+        let component = TaskListComponent::default();
+        let id = component.id();
+
+        assert!(!id.is_empty());
+    }
+
+    #[test]
+    fn test_tasks() {
+        let component = TaskListComponent::default();
+        let tasks = component.tasks();
+
+        assert!(tasks.is_empty());
+    }
+
+    #[test]
+    fn test_transitions() {
+        let component = TaskListComponent::default();
+        let transitions = component.transitions();
+
+        assert!(transitions.is_empty());
+    }
+
+    #[test]
+    fn test_add_task() {
+        let component = TaskListComponent::default();
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+
+        assert_eq!(component.tasks().len(), 1);
+        assert_eq!(component.tasks()[0].id, task.id);
+    }
+
+    #[test]
+    fn test_remove_task() {
+        let component = TaskListComponent::default();
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        component.remove_task(task.id.clone());
+
+        assert!(component.tasks().is_empty());
+    }
+
+    #[test]
+    fn test_resize_task() {
+        let component = TaskListComponent::default();
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        component.resize_task(
+            task.id.clone(),
+            component::tasklist::tasklist::Size {
+                width: 2,
+                height: 3,
+            },
+        );
+
+        let f = component.tasks()[0].size.unwrap();
+        let b = Some(component::tasklist::tasklist::Size {
+            width: 2,
+            height: 3,
+        })
+        .unwrap();
+        assert_eq!(f.height, b.height);
+        assert_eq!(f.width, b.width);
+    }
+
+    #[test]
+    fn test_move_task() {
+        let component = TaskListComponent::default();
+        let task = component.add_task(component::tasklist::tasklist::Position { x: 1, y: 1 });
+        component.move_task(
+            task.id.clone(),
+            component::tasklist::tasklist::Position { x: 0, y: 0 },
+        );
+
+        assert_eq!(component.tasks()[0].position.x, 0);
+        assert_eq!(component.tasks()[0].position.x, 0);
+    }
+
+    #[test]
+    fn test_add_transition() {
+        let component = TaskListComponent::default();
+        let task1 = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        let task2 = component.add_task(component::tasklist::tasklist::Position { x: 1, y: 1 });
+        let transition = component.add_transition(task1.id.clone(), task2.id.clone());
+
+        assert_eq!(component.transitions().len(), 1);
+        assert_eq!(component.transitions()[0].id, transition.id);
+    }
+
+    #[test]
+    fn test_remove_transition() {
+        let component = TaskListComponent::default();
+        let task1 = component.add_task(component::tasklist::tasklist::Position { x: 0, y: 0 });
+        let task2 = component.add_task(component::tasklist::tasklist::Position { x: 1, y: 1 });
+        let transition = component.add_transition(task1.id.clone(), task2.id.clone());
+        component.remove_transition(transition.id.clone());
+
+        assert!(component.transitions().is_empty());
+    }
+}
