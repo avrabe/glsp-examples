@@ -34,7 +34,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b && yarn jco && yarn postbundle && yarn bundle",
+    "build": "yarn jco && tsc -b && yarn postbundle && yarn bundle",
     "bundle": "webpack",
     "postbundle": "copyfiles -u 1 src/database/* lib/",
     "clean": "rimraf lib dist tsconfig.tsbuildinfo",
