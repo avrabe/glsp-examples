@@ -34,13 +34,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -b && yarn jco && yarn postbundle && yarn bundle",
+    "build": "yarn jco && tsc -b && yarn postbundle && yarn bundle",
     "bundle": "webpack",
     "postbundle": "copyfiles -u 1 src/database/* lib/",
     "clean": "rimraf lib dist tsconfig.tsbuildinfo",
     "jco": "cargo component build --release && jco transpile ../target/wasm32-wasi/release/hello.wasm --tla-compat  --no-namespaced-exports -o src/database",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "start": "node --enable-source-maps lib/index.js",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
+    "start": "node --enable-source-maps lib/app.js",
     "watch": "tsc -w"
   },
   "dependencies": {
