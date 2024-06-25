@@ -29,4 +29,5 @@ jobs:
       uses: Swatinem/rust-cache@v2
     - run: cargo install cargo-component
     - run: cargo component build
+    - run: curl https://wasmtime.dev/install.sh -sSf | bash
     - run: cargo component test
