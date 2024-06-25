@@ -13,6 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./project-templates/node-json-vscode
 
     steps:
     - uses: actions/checkout@v4
@@ -24,6 +27,6 @@ jobs:
           target: wasm32-wasi
     - name: Enable cache
       uses: Swatinem/rust-cache@v2
-    - run: ca    rgo install cargo-component
+    - run: cargo install cargo-component
     - run: cargo component build
     - run: cargo component test
