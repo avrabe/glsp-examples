@@ -17,13 +17,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: actions-rs/toolchain@v1
-        with:
+      with:
           profile: minimal
           toolchain: stable
           override: true
           target: wasm32-wasi
     - name: Enable cache
-        uses: Swatinem/rust-cache@v2
-    - run: cargo install cargo-component
+      uses: Swatinem/rust-cache@v2
+    - run: ca    rgo install cargo-component
     - run: cargo component build
     - run: cargo component test
