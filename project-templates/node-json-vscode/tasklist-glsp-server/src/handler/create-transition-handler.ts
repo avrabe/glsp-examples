@@ -16,9 +16,7 @@
  ********************************************************************************/
 import { Command, CreateEdgeOperation, DefaultTypes, JsonCreateEdgeOperationHandler, MaybePromise } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
 import { TaskListModelState } from '../model/tasklist-model-state.js';
-import { Transition } from '../model/tasklist-model.js';
 
 @injectable()
 export class CreateTransitionHandler extends JsonCreateEdgeOperationHandler {
@@ -29,13 +27,7 @@ export class CreateTransitionHandler extends JsonCreateEdgeOperationHandler {
 
     override createCommand(operation: CreateEdgeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
-            const transition: Transition = {
-                id: uuid.v4(),
-                sourceTaskId: operation.sourceElementId,
-                targetTaskId: operation.targetElementId
-            };
-            this.modelState.worldModel.addTransition(operation.sourceElementId, operation.targetElementId);
-            this.modelState.sourceModel.transitions.push(transition);
+            this.modelState.sourceModel.addTransition(operation.sourceElementId, operation.targetElementId);
         });
     }
 

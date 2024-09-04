@@ -26,7 +26,7 @@ import { TaskList } from './tasklist-model.js';
 export class TaskListStorage extends AbstractJsonModelStorage {
     private world = tasklist.TasklistModel.createModelForEmptyFile();
 
-    public log(msg: string) {
+    public log(msg: string): void {
         console.log('storage ' + msg);
     }
 
@@ -38,17 +38,13 @@ export class TaskListStorage extends AbstractJsonModelStorage {
         this.log('Loading source model from ' + sourceUri);
         this.world.loadFromFile(sourceUri);
         this.log(this.world.id());
-        this.modelState.updateSourceTasklistModel(this.world);
-
-        const taskList = this.loadFromFile(sourceUri, TaskList.is);
-        this.modelState.updateSourceModel(taskList);
+        this.modelState.updateSourceModel(this.world);
     }
 
     saveSourceModel(action: SaveModelAction): MaybePromise<void> {
         const sourceUri = this.getFileUri(action);
         this.log('Saving source model to ' + sourceUri);
         this.world.saveToFile(sourceUri);
-        //this.writeFile(sourceUri, this.modelState.sourceModel);
     }
 
     protected override createModelForEmptyFile(path: string): TaskList {

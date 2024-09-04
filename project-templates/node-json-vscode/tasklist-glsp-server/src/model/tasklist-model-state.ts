@@ -15,36 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 import { DefaultModelState, JsonModelState } from '@eclipse-glsp/server';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { TasklistModel } from '../database/interfaces/component-tasklist-tasklist.js';
-import { TaskListModelIndex } from './tasklist-model-index.js';
-import { TaskList } from './tasklist-model.js';
 
 @injectable()
-export class TaskListModelState extends DefaultModelState implements JsonModelState<TaskList> {
-    @inject(TaskListModelIndex)
-    override readonly index: TaskListModelIndex;
-
+export class TaskListModelState extends DefaultModelState implements JsonModelState<TasklistModel> {
     protected _world: TasklistModel;
-    protected _taskList: TaskList;
 
-    public log(msg: string) {
+    public log(msg: string): void {
         console.log('state ' + msg);
     }
-    get sourceModel(): TaskList {
-        return this._taskList;
-    }
 
-    get worldModel(): TasklistModel {
+    get sourceModel(): TasklistModel {
         return this._world;
     }
 
-    updateSourceTasklistModel(taskList: TasklistModel): void {
+    updateSourceModel(taskList: TasklistModel): void {
         this._world = taskList;
         this.log(this._world.id());
-    }
-    updateSourceModel(taskList: TaskList): void {
-        this._taskList = taskList;
-        this.index.indexTaskList(taskList);
     }
 }

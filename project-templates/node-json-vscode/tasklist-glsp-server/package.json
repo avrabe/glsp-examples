@@ -38,7 +38,7 @@
     "bundle": "webpack",
     "postbundle": "copyfiles -u 1 src/database/* lib/",
     "clean": "rimraf lib dist tsconfig.tsbuildinfo",
-    "jco": "cargo component build --release && jco transpile ../target/wasm32-wasi/release/hello.wasm --tla-compat  --no-namespaced-exports -o src/database",
+    "jco": "cargo component build --release && jco -V && jco transpile ../target/wasm32-wasi/release/hello.wasm --tla-compat  --no-namespaced-exports -o src/database",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "prepare": "yarn clean && yarn build",
@@ -50,9 +50,9 @@
     "lerna": "^8.1.2"
   },
   "devDependencies": {
-    "@bytecodealliance/jco": "^1.0.3",
-    "@bytecodealliance/preview2-shim": "^0.16.0",
-    "@eclipse-glsp/server": "2.0.0",
+    "@bytecodealliance/jco": "1.5.0",
+    "@bytecodealliance/preview2-shim": "0.16.5",
+    "@eclipse-glsp/server": "2.2.1",
     "copyfiles": "^2.4.1",
     "inversify": "6.0.2",
     "raw-loader": "^4.0.2",

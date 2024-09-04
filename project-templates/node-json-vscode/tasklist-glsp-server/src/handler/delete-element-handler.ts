@@ -14,19 +14,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import {
-    Command,
-    DeleteElementOperation,
-    GEdge,
-    GNode,
-    JsonOperationHandler,
-    MaybePromise,
-    remove,
-    toTypeGuard
-} from '@eclipse-glsp/server';
+import { Command, DeleteElementOperation, JsonOperationHandler, MaybePromise } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { TaskListModelState } from '../model/tasklist-model-state.js';
-import { Task, Transition } from '../model/tasklist-model.js';
 
 @injectable()
 export class DeleteElementHandler extends JsonOperationHandler {
@@ -42,41 +32,40 @@ export class DeleteElementHandler extends JsonOperationHandler {
     }
 
     protected delete(elementId: string): void {
-        const index = this.modelState.index;
-        const gModelElement = this.getGModelElementToDelete(elementId);
-        const gModelElementId = gModelElement?.id ?? elementId;
-        const gEdgeIds = this.getIncomingAndOutgoingEdgeIds(gModelElement);
-
-        [...gEdgeIds, gModelElementId]
-            .map(id => index.findTaskOrTransition(id))
-            .forEach(modelElement => this.deleteModelElement(modelElement));
+        // const index = this.modelState.index;
+        // const gModelElement = this.getGModelElementToDelete(elementId);
+        // const gModelElementId = gModelElement?.id ?? elementId;
+        // const gEdgeIds = this.getIncomingAndOutgoingEdgeIds(gModelElement);
+        // TBD [...gEdgeIds, gModelElementId]
+        //     .map(id => index.findTaskOrTransition(id))
+        //    .forEach(modelElement => this.deleteModelElement(modelElement));
     }
 
-    private getGModelElementToDelete(elementId: string): GNode | GEdge | undefined {
-        const index = this.modelState.index;
-        const element = index.get(elementId);
-        if (element instanceof GNode || element instanceof GEdge) {
-            return element;
-        }
-        return index.findParentElement(elementId, toTypeGuard(GNode)) ?? index.findParentElement(elementId, toTypeGuard(GEdge));
-    }
+    // private getGModelElementToDelete(elementId: string): GNode | GEdge | undefined {
+    //     const index = this.modelState.index;
+    //     const element = index.get(elementId);
+    //     if (element instanceof GNode || element instanceof GEdge) {
+    //         return element;
+    //     }
+    //     return index.findParentElement(elementId, toTypeGuard(GNode)) ?? index.findParentElement(elementId, toTypeGuard(GEdge));
+    // }
 
-    protected getIncomingAndOutgoingEdgeIds(node: GNode | GEdge | undefined): string[] {
-        return this.getIncomingAndOutgoingEdges(node).map(edge => edge.id);
-    }
+    // protected getIncomingAndOutgoingEdgeIds(node: GNode | GEdge | undefined): string[] {
+    //     return this.getIncomingAndOutgoingEdges(node).map(edge => edge.id);
+    // }
 
-    protected getIncomingAndOutgoingEdges(node: GNode | GEdge | undefined): GEdge[] {
-        if (node instanceof GNode) {
-            return [...this.modelState.index.getIncomingEdges(node), ...this.modelState.index.getOutgoingEdges(node)];
-        }
-        return [];
-    }
+    // protected getIncomingAndOutgoingEdges(node: GNode | GEdge | undefined): GEdge[] {
+    //     if (node instanceof GNode) {
+    //         return [...this.modelState.index.getIncomingEdges(node), ...this.modelState.index.getOutgoingEdges(node)];
+    //     }
+    //     return [];
+    // }
 
-    private deleteModelElement(modelElement: Task | Transition | undefined): void {
-        if (Task.is(modelElement)) {
-            remove(this.modelState.sourceModel.tasks, modelElement);
-        } else if (Transition.is(modelElement)) {
-            remove(this.modelState.sourceModel.transitions, modelElement);
-        }
-    }
+    // private deleteModelElement(modelElement: Task | Transition | undefined): void {
+    //     if (Task.is(modelElement)) {
+    //         this.modelState.sourceModel.removeTask(modelElement.id);
+    //     } else if (Transition.is(modelElement)) {
+    //         this.modelState.sourceModel.removeTransition(modelElement.id);
+    //     }
+    // }
 }

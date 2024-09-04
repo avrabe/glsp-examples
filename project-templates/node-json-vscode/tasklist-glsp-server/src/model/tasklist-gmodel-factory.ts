@@ -24,19 +24,19 @@ export class TaskListGModelFactory implements GModelFactory {
     @inject(TaskListModelState)
     protected modelState: TaskListModelState;
 
-    createModel(): void {
-        const taskList = this.modelState.sourceModel;
-        this.modelState.index.indexTaskList(taskList);
-        const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
-        const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
+    async createModel(): Promise<void> {
+        const work_tasklist = this.modelState.sourceModel;
+        const work_tasks: Array<Task> = work_tasklist.tasks();
+        const childNodes = work_tasks.map(task => this.createTaskNode(task));
+        const childEdges = work_tasklist.transitions().map(transition => this.createTransitionEdge(transition));
+
         const newRoot = GGraph.builder() //
-            .id(taskList.id)
+            .id(work_tasklist.id())
             .addChildren(childNodes)
             .addChildren(childEdges)
             .build();
         this.modelState.updateRoot(newRoot);
     }
-
     protected createTaskNode(task: Task): GNode {
         const builder = GNode.builder()
             .id(task.id)

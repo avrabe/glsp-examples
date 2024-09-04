@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-import { ChangeBoundsOperation, Command, Dimension, GNode, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
+import { ChangeBoundsOperation, Command, Dimension, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { TaskListModelState } from '../model/tasklist-model-state.js';
 
@@ -33,18 +33,9 @@ export class TaskListChangeBoundsHandler extends JsonOperationHandler {
     }
 
     protected changeElementBounds(elementId: string, newSize: Dimension, newPosition?: Point): void {
-        this.modelState.worldModel.resizeTask(elementId, newSize);
+        this.modelState.sourceModel.resizeTask(elementId, newSize);
         if (newPosition) {
-            this.modelState.worldModel.moveTask(elementId, newPosition);
-        }
-        const index = this.modelState.index;
-        const taskNode = index.findByClass(elementId, GNode);
-        const task = taskNode ? index.findTask(taskNode.id) : undefined;
-        if (task) {
-            task.size = newSize;
-            if (newPosition) {
-                task.position = newPosition;
-            }
+            this.modelState.sourceModel.moveTask(elementId, newPosition);
         }
     }
 }
